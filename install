@@ -1,0 +1,59 @@
+#!/usr/bin/bash
+
+# configure the variables & required packages
+if [[ -z $STOWFOLDERS ]]; then
+	STOWFOLDERS="bin,tmux,nvim"
+fi
+
+if [[ -z $DOTFILES ]]; then
+	DOTFILES=$HOME/.dotfiles
+fi
+
+if [[ -z $BASHRC_FILE ]]; then
+	BASHRC_FILE="$HOME/.bashrc"
+fi
+
+if [[ $# -eq 1 ]]; then
+	pac_man=$1
+else
+	pac_man="sudo apt"
+fi
+
+req_pas="xclip sed grep fzf"
+
+echo -e "\nInstalling \`$req_pas\`"
+$pac_man install $req_pas -y
+
+# Sym link the Configs
+echo -e "\nStowing configurations.."
+pushd $DOTFILES
+for folder in $(echo $STOWFOLDERS | sed 's/,/ /g') 
+do
+	echo "stow $folder"
+	stow -D $folder
+	stow $folder
+done
+popd
+
+# Add bindings
+add_key_binding() {
+	local modifier_key="f"
+	local binding="$1"
+	local command="$2"
+
+	if grep -q "bind -x .*\\C.*\\$binding" "$BASHRC_FILE"; then
+		echo "Removing existing binding for \`$binding\`"
+		sed -i "\|bind -x .*\\C.*\\$binding|d" "$BASHRC_FILE"
+	fi
+
+	echo bind -x "'\"\\C-$modifier_key\\$binding\": \"$command\"'" >> $BASHRC_FILE
+	echo "Added binding: \`$binding\`"
+}
+
+# fuzzy history
+echo -e "\nConfiguring bindings..."
+add_key_binding "C-h" "history | sort -rn | fzf --padding=5,0,0,0 | sed '\''s/^[ ]*[0-9]*[ ]*//'\'' | xclip -selection clipboard; echo Copied: \$(xclip -o -selection clipboard); echo"
+add_key_binding "C-f" "~/.local/bin/tmux-sessionizer"
+
+echo "source $BASHRC_FILE" | xclip -selection clipboad
+echo -e "\nSource your \`$BASHRC_FILE\` to enable new bindings: \`source $BASHRC_FILE\`\njust HIT that C-v 🙃....."

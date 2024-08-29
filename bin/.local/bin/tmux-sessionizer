@@ -1,0 +1,33 @@
+#!/usr/bin/bash
+
+# Configure the Directories to fuzzy find seperated by ` `
+if [[ $# -eq 1 ]]; then
+	all_dirs="/mnt/c/Users/Asus/Downloads/current\ projects/" #$1 gotta figure this shit out...
+else
+	all_dirs="~/ /mnt/c/Users/Asus/Downloads/current\ projects/ /mnt/c/Users/Asus/Downloads/all\ project/Projects/"
+fi
+
+
+selected_dir=$(eval "find $all_dirs -mindepth 1 -maxdepth 1 -type d" | fzf)
+
+if [[ -z $selected_dir ]]; then
+    exit 0
+fi
+
+session_name=$(basename "$selected_dir" | tr . _)
+tmux_running=$(pgrep tmux)
+
+if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
+    tmux new-session -s "$session_name" -c "$selected_dir"
+    exit 0
+fi
+
+if ! tmux has-session -t="$session_name" 2> /dev/null; then
+    tmux new-session -ds "$session_name" -c "$selected_dir"
+fi
+
+if [[ -z $TMUX ]]; then
+	tmux a -t "$session_name"
+else
+	tmux switch-client -t "$session_name"
+fi
