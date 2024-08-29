@@ -1,0 +1,52 @@
+#!/usr/bin/bash
+
+# configure the variables & removal packages
+if [[ -z $STOWFOLDERS ]]; then
+	STOWFOLDERS="bin,tmux,nvim"
+fi
+
+if [[ -z $DOTFILES ]]; then
+	DOTFILES=$HOME/.dotfiles
+fi
+
+if [[ -z $BASHRC_FILE ]]; then
+	BASHRC_FILE="$HOME/.bashrc"
+fi
+if [[ $# -eq 1 ]]; then
+	pac_man=$1
+else
+	pac_man="sudo apt"
+fi
+
+req_pas="xclip fzf"
+
+echo "source $BASHRC_FILE" | xclip -selection clipboad
+echo -e "\nRemoving \`$req_pas\`"
+$pac_man remove $req_pas
+
+# Remove the Sym links
+echo -e "\nUnstowing configurations.."
+pushd $DOTFILES
+for folder in $(echo $STOWFOLDERS | sed 's/,/ /g') 
+do
+	echo "unstow $folder"
+	stow -D $folder
+done
+popd
+
+# Remove bindings
+remove_key_binding() {
+	local modifier_key="f"
+	local binding="$1"
+
+	if grep -q "bind -x .*\\C.*\\$binding" "$BASHRC_FILE"; then
+		echo "Removing binding for \`$binding\`"
+		sed -i "\|bind -x .*\\C.*\\$binding|d" "$BASHRC_FILE"
+	fi
+}
+
+echo -e "\nRemove bindings..."
+remove_key_binding "C-h"
+remove_key_binding "C-f"
+
+echo -e "\nSource your \`$BASHRC_FILE\` to disable old bindings: \`source $BASHRC_FILE\`\njust HIT that C-v 🙃....."

@@ -6,7 +6,7 @@ Clone the repo and run the install script.... dorkkkkkk🤓
 <details><summary> Linux and Mac </summary>
 
 ```sh
-git clone https://github.com/dhextras/.dotfiles.git "${XDG_CONFIG_HOME:-$HOME}" && "${XDG_CONFIG_HOME:-$HOME}"/.dotfiles/install
+git clone https://github.com/dhextras/.dotfiles.git "${XDG_CONFIG_HOME:-$HOME}"/.dotfiles && "${XDG_CONFIG_HOME:-$HOME}"/.dotfiles/install
 ```
 
 </details>
@@ -15,6 +15,17 @@ git clone https://github.com/dhextras/.dotfiles.git "${XDG_CONFIG_HOME:-$HOME}" 
 
 ```
 Just fuck offf, will yeah.... 🖕
+```
+
+</details>
+
+
+### Preremoval
+
+<details><summary> Linux and Mac </summary>
+
+```sh
+"${XDG_CONFIG_HOME:-$HOME}"/.dotfiles/preremoval
 ```
 
 </details>

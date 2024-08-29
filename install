@@ -50,9 +50,10 @@ add_key_binding() {
 	echo "Added binding: \`$binding\`"
 }
 
-# fuzzy history
 echo -e "\nConfiguring bindings..."
+# fuzzy history
 add_key_binding "C-h" "history | sort -rn | fzf --padding=5,0,0,0 | sed '\''s/^[ ]*[0-9]*[ ]*//'\'' | xclip -selection clipboard; echo Copied: \$(xclip -o -selection clipboard); echo"
+# fuzzy tmux sessionizer
 add_key_binding "C-f" "~/.local/bin/tmux-sessionizer"
 
 echo "source $BASHRC_FILE" | xclip -selection clipboad
