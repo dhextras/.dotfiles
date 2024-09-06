@@ -51,7 +51,7 @@ vim.opt.splitbelow = true
 --  See `:help 'list'`
 --  and `:help 'listchars'`
 vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣', eol = '⤶' }
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
@@ -69,3 +69,6 @@ vim.opt.backup = false
 -- Save undo file data
 vim.opt.undodir = os.getenv 'HOME' .. '/.vim/undodir'
 vim.opt.undofile = true
+
+vim.opt.laststatus = 3
+vim.opt.winbar = '%=%m %f'

@@ -1,0 +1,70 @@
+#!/bin/bash
+
+PEM_FOLDER="$HOME/.local/bin/pem_files"
+INSTANCES_JSON="$HOME/.local/bin/instances.json"
+
+# File selection for pem files
+select_pem_file() {
+    PEM_FILES=("$PEM_FOLDER"/*.pem)
+    if [ ${#PEM_FILES[@]} -eq 0 ]; then
+        echo "No PEM files found in $PEM_FOLDER"
+        exit 1
+    fi
+
+    pem_file=$(printf "%s\n" "${PEM_FILES[@]}" | fzf --prompt "Select a PEM file: ")
+    if [ -z "$pem_file" ]; then
+        echo "Operation cancelled."
+        exit 1
+    fi
+
+    echo "Selected PEM file: $pem_file"
+}
+
+# Dns selection for the instance
+select_public_dns() {
+    pem_name=$(basename "$pem_file" .pem)
+    echo "Selected PEM name: $pem_name"
+
+    public_dns_options=$(jq -r ".instances[] | select(.pem_name == \"$pem_name\") | .public_dns | to_entries[] | \"\(.key) - \(.value)\"" "$INSTANCES_JSON")
+    if [ -z "$public_dns_options" ]; then
+        echo "No instance information found for $pem_file in $INSTANCES_JSON"
+        exit 1
+    fi
+
+    public_dns_key=$(printf "%s\n" "$public_dns_options" | fzf --prompt "Select a public DNS: " | cut -d'-' -f1 | xargs)
+    if [ -z "$public_dns_key" ]; then
+        echo "Operation cancelled."
+        exit 1
+    fi
+
+    public_dns=$(jq -r ".instances[] | select(.pem_name == \"$pem_name\") | .public_dns[\"$public_dns_key\"]" "$INSTANCES_JSON")
+    echo "Selected Public DNS: $public_dns"
+    instance_user=$(jq -r ".instances[] | select(.pem_name == \"$pem_name\") | .user" "$INSTANCES_JSON")
+    echo "Instance User: $instance_user"
+}
+
+connect() {
+    case "$1" in
+    -s)
+        ssh -i "$pem_file" "$instance_user@$public_dns"
+        ;;
+    -f)
+        sftp -i "$pem_file" "$instance_user@$public_dns"
+        ;;
+    *)
+        echo "Invalid option. Usage: $0 [-s|-f]"
+        exit 1
+        ;;
+    esac
+}
+
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 [-s|-f]"
+    exit 1
+fi
+
+clear
+select_pem_file
+select_public_dns
+connect "$1"
+
