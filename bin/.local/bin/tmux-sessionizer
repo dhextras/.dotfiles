@@ -1,14 +1,33 @@
 #!/usr/bin/bash
 
-# Configure the Directories to fuzzy find seperated by ` `
+# Configure the Directories to fuzzy find. In an array
 if [[ $# -eq 1 ]]; then
-	all_dirs="/mnt/c/Users/Asus/Downloads/current\ projects/" #$1 gotta figure this shit out...
+	all_dirs=("/mnt/c/Users/Asus/Downloads/current projects") #$1 gotta figure this shit out...
 else
-	all_dirs="~/ /mnt/c/Users/Asus/Downloads/current\ projects/ /mnt/c/Users/Asus/Downloads/all\ project/Projects/"
+	all_dirs=("/mnt/c/Users/Asus/Downloads/current projects" "/mnt/c/Users/Asus/Downloads/all project/Projects")
 fi
 
+# If one of the all_dirs were nested or grouped by some sort ( Kinda a slow )
+list_selectable_dirs() {
+	for entry in "$1"/*; do
+		if [ -d "$entry" ] && [ "$(find "$entry" -maxdepth 1 -type f | wc -l)" -gt 0 ]; then
+			echo "$entry"
+		elif [ -d "$entry" ]; then
+			echo "$entry" # Remove if you only need the end project with out any parent dirs
+			list_selectable_dirs "$entry"
+		fi
+	done
+}
 
-selected_dir=$(eval "find $all_dirs -mindepth 1 -maxdepth 1 -type d" | fzf)
+selected_dir=$({
+    for dir in "${all_dirs[@]}"; do
+        list_selectable_dirs "$dir"
+    done
+    echo ~/.dotfiles
+} | fzf --padding=5,0,0,0)
+
+# Simply use this if the dirs aren't nested to the core, and comment the above mess
+# selected_dir=$(eval "find $all_dirs -mindepth 1 -maxdepth 1 -type d" | fzf)
 
 if [[ -z $selected_dir ]]; then
     exit 0
