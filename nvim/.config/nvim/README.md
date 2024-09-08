@@ -21,4 +21,3 @@ nvim
 
 That's it! Lazy will install all the plugins you have. Use `:Lazy` to view
 current plugin status. Hit `q` to close the window.
-

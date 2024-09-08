@@ -70,5 +70,9 @@ vim.opt.backup = false
 vim.opt.undodir = os.getenv 'HOME' .. '/.vim/undodir'
 vim.opt.undofile = true
 
+-- Global status line & custom winbar file name
 vim.opt.laststatus = 3
 vim.opt.winbar = '%=%m %f'
+
+-- Auto fold
+vim.opt.foldmethod = 'indent'
