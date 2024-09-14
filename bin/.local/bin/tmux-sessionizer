@@ -2,9 +2,9 @@
 
 # Configure the Directories to fuzzy find. In an array
 if [[ $# -eq 1 ]]; then
-	all_dirs=("/mnt/c/Users/Asus/Downloads/current projects") #$1 gotta figure this shit out...
+	all_dirs=("${XDG_CONFIG_HOME:-$HOME}/projects_crnt") #$1 gotta figure this shit out...
 else
-	all_dirs=("/mnt/c/Users/Asus/Downloads/current projects" "/mnt/c/Users/Asus/Downloads/all project/Projects")
+	all_dirs=("${XDG_CONFIG_HOME:-$HOME}/projects_crnt" "${XDG_CONFIG_HOME:-$HOME}/projects_fnsd")
 fi
 
 # If one of the all_dirs were nested or grouped by some sort ( Kinda a slow )

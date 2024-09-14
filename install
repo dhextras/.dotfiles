@@ -6,11 +6,11 @@ if [[ -z $STOWFOLDERS ]]; then
 fi
 
 if [[ -z $DOTFILES ]]; then
-	DOTFILES=$HOME/.dotfiles
+	DOTFILES="${XDG_CONFIG_HOME:-$HOME}"/.dotfiles
 fi
 
 if [[ -z $BASHRC_FILE ]]; then
-	BASHRC_FILE="$HOME/.bashrc"
+	BASHRC_FILE="${XDG_CONFIG_HOME:-$HOME}"/.bashrc
 fi
 
 if [[ $# -eq 1 ]]; then
@@ -19,8 +19,10 @@ else
 	pac_man="sudo apt"
 fi
 
-req_pas="xclip sed grep fzf"
+req_pas="xclip sed grep fzf stow"
 
+echo -e "\nUpdate packages.."
+$pac_man update
 echo -e "\nInstalling \`$req_pas\`"
 $pac_man install $req_pas -y
 
