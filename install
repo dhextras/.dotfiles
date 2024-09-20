@@ -21,10 +21,10 @@ fi
 
 req_pas="xclip sed grep fzf stow"
 
-# echo -e "\nUpdate packages.."
-# $pac_man update
-# echo -e "\nInstalling \`$req_pas\`"
-# $pac_man install $req_pas -y
+echo -e "\nUpdate packages.."
+$pac_man update
+echo -e "\nInstalling \`$req_pas\`"
+$pac_man install $req_pas -y
 
 # Sym link the Configs
 echo -e "\nStowing configurations.."
