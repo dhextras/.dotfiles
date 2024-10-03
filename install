@@ -21,10 +21,13 @@ fi
 
 req_pas="xclip sed grep fzf stow"
 
-echo -e "\nUpdate packages.."
-$pac_man update
-echo -e "\nInstalling \`$req_pas\`"
-$pac_man install $req_pas -y
+if [[ $1 != "no-install" ]]; then
+	echo -e "\nUpdate packages.."
+	$pac_man update
+	echo -e "\nInstalling \`$req_pas\`"
+	$pac_man install $req_pas -y
+fi
+
 
 # Sym link the Configs
 echo -e "\nStowing configurations.."
@@ -60,7 +63,7 @@ add_key_binding "C-f" "~/.local/bin/tmux-sessionizer"
 # open editor in the current directory
 add_key_binding "C-e" "nvim ."
 # fuzzy directory changer
-add_key_binding "C-g" "cd \$(find ${XDG_CONFIG_HOME:-$HOME}/ /mnt/c/Users/Asus/Downloads -type d | fzf); clear; echo Current Dir: \$(pwd)"
+add_key_binding "C-g" "cd \"\$(find ${XDG_CONFIG_HOME:-$HOME}/ /mnt/c/Users/Asus/Downloads -type d | fzf --padding=5,0,0,0)\"; clear; echo Current Dir: \$(pwd)"
 
 echo "source $BASHRC_FILE" | xclip -selection clipboad
 echo -e "\nSource your \`$BASHRC_FILE\` to enable new bindings: \`source $BASHRC_FILE\`\njust HIT that C-v 🙃....."
