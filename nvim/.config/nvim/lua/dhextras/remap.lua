@@ -50,3 +50,14 @@ vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle, { desc = '[U]ndo tree' 
 
 -- Open workspace explorer
 vim.keymap.set('n', '<leader>we', vim.cmd.Ex, { desc = '[W]orkplace [E]xplorer' })
+
+-- Load and save registers ( load_regs funcs )
+vim.keymap.set('n', '<leader>lrs', function()
+  local load_reg = require 'dhextras.funcs.load_regs'
+  load_reg.save_macro_from_register()
+end, { desc = '[L]oad [R]egs - [S]ave' })
+
+vim.keymap.set('n', '<leader>lrl', function()
+  local load_reg = require 'dhextras.funcs.load_regs'
+  load_reg.load_macros_to_registers()
+end, { desc = '[L]oad [R]egs - [L]oad' })
