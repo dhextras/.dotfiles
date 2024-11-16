@@ -55,9 +55,14 @@ vim.keymap.set('n', '<leader>we', vim.cmd.Ex, { desc = '[W]orkplace [E]xplorer' 
 vim.keymap.set('n', '<leader>lrs', function()
   local load_reg = require 'dhextras.funcs.load_regs'
   load_reg.save_macro_from_register()
-end, { desc = '[L]oad [R]egs - [S]ave' })
+end, { desc = '[L]oad [R]egs - [S]ave register' })
+
+vim.keymap.set('n', '<leader>lra', function()
+  local load_reg = require 'dhextras.funcs.load_regs'
+  load_reg.save_all_available_macros()
+end, { desc = '[L]oad [R]egs - Save [A]ll registers' })
 
 vim.keymap.set('n', '<leader>lrl', function()
   local load_reg = require 'dhextras.funcs.load_regs'
   load_reg.load_macros_to_registers()
-end, { desc = '[L]oad [R]egs - [L]oad' })
+end, { desc = '[L]oad [R]egs - [L]oad saved registers' })
