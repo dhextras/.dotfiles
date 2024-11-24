@@ -51,15 +51,18 @@ connect() {
     -f)
         sftp -i "$pem_file" "$instance_user@$public_dns"
         ;;
+    -v)
+        ssh -i "$pem_file" -L 5901:localhost:5901 -N -f "$instance_user@$public_dns"
+
     *)
-        echo "Invalid option. Usage: $0 [-s|-f]"
+        echo "Invalid option. Usage: $0 [-s|-f|-v]"
         exit 1
         ;;
     esac
 }
 
 if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 [-s|-f]"
+    echo "Usage: $0 [-s|-f|-v]"
     exit 1
 fi
 
