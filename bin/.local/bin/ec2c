@@ -54,15 +54,18 @@ connect() {
     -v)
         ssh -i "$pem_file" -L 5901:localhost:5901 -N -f "$instance_user@$public_dns"
         ;;
+    -r)
+        ssh -i "$pem_file" -qnN -L 3389:localhost:3389 "$instance_user@$public_dns"
+        ;;
     *)
-        echo "Invalid option. Usage: $0 [-s|-f|-v]"
+        echo "Invalid option. Usage: $0 [-s|-f|-v|-r]"
         exit 1
         ;;
     esac
 }
 
 if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 [-s|-f|-v]"
+    echo "Usage: $0 [-s|-f|-v|-r]"
     exit 1
 fi
 
