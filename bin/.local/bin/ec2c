@@ -53,7 +53,7 @@ connect() {
         ;;
     -v)
         ssh -i "$pem_file" -L 5901:localhost:5901 -N -f "$instance_user@$public_dns"
-
+        ;;
     *)
         echo "Invalid option. Usage: $0 [-s|-f|-v]"
         exit 1
