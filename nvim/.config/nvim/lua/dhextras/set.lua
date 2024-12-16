@@ -67,6 +67,7 @@ vim.opt.swapfile = false
 vim.opt.backup = false
 
 -- Save undo file data
+vim.opt.undolevels = 100000
 vim.opt.undodir = os.getenv 'HOME' .. '/.vim/undodir'
 vim.opt.undofile = true
 

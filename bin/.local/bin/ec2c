@@ -44,6 +44,8 @@ select_public_dns() {
 }
 
 connect() {
+    port=5901
+
     case "$1" in
     -s)
         ssh -i "$pem_file" "$instance_user@$public_dns"
@@ -52,25 +54,29 @@ connect() {
         sftp -i "$pem_file" "$instance_user@$public_dns"
         ;;
     -v)
-        ssh -i "$pem_file" -L 5901:localhost:5901 -N -f "$instance_user@$public_dns"
+        if [[ $2 =~ ^-?[0-9]+$ ]]; then
+            port=$2
+        fi
+        ssh -i "$pem_file" -L $port:localhost:5901 -N -f "$instance_user@$public_dns"
         ;;
     -r)
         ssh -i "$pem_file" -qnN -L 3389:localhost:3389 "$instance_user@$public_dns"
         ;;
     *)
-        echo "Invalid option. Usage: $0 [-s|-f|-v|-r]"
+        echo "Invalid option. Usage: $0 [-s|-f|-v <port>|-r]"
         exit 1
         ;;
     esac
 }
-
-if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 [-s|-f|-v|-r]"
+if [[ "$1" == "-v" && "$#" -gt 2 ]]; then
+    echo "Usage: $0 -v <optional:port>"
+    exit 1
+elif [[ "$1" != "-v" && "$#" -ne 1 ]]; then
+    echo "Usage: $0 [-s|-f|-v <optinal:port>|-r]"
     exit 1
 fi
 
 clear
 select_pem_file
 select_public_dns
-connect "$1"
-
+connect "$1" "$2"
