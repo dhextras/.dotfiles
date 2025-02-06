@@ -68,7 +68,7 @@ vim.keymap.set('n', '<leader>lrl', function()
 end, { desc = '[L]oad [R]egs - [L]oad saved registers' })
 
 -- Key maps to move around quickfix list
-vim.keymap.set('n', '<C-c>n', function()
+vim.keymap.set('n', '<C-c><C-n>', function()
   local qf = vim.fn.getqflist()
   local idx = vim.fn.getqflist({ idx = 0 }).idx
   if idx == #qf then
@@ -76,13 +76,13 @@ vim.keymap.set('n', '<C-c>n', function()
   else
     vim.cmd 'cnext'
   end
-end, { noremap = true, silent = true })
+end, { noremap = true, silent = true, desc = 'Quick fix - [C][N]ext' })
 
-vim.keymap.set('n', '<C-c>p', function()
+vim.keymap.set('n', '<C-c><C-p>', function()
   local idx = vim.fn.getqflist({ idx = 0 }).idx
   if idx == 1 then
     vim.cmd 'clast' -- Wrap to last item
   else
     vim.cmd 'cprev'
   end
-end, { noremap = true, silent = true })
+end, { noremap = true, silent = true, desc = 'Quick fix - [C][P]rev' })
