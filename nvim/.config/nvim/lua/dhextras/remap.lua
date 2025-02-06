@@ -66,3 +66,23 @@ vim.keymap.set('n', '<leader>lrl', function()
   local load_reg = require 'dhextras.funcs.load_regs'
   load_reg.load_macros_to_registers()
 end, { desc = '[L]oad [R]egs - [L]oad saved registers' })
+
+-- Key maps to move around quickfix list
+vim.keymap.set('n', '<C-c>n', function()
+  local qf = vim.fn.getqflist()
+  local idx = vim.fn.getqflist({ idx = 0 }).idx
+  if idx == #qf then
+    vim.cmd 'cfirst' -- Wrap to first item
+  else
+    vim.cmd 'cnext'
+  end
+end, { noremap = true, silent = true })
+
+vim.keymap.set('n', '<C-c>p', function()
+  local idx = vim.fn.getqflist({ idx = 0 }).idx
+  if idx == 1 then
+    vim.cmd 'clast' -- Wrap to last item
+  else
+    vim.cmd 'cprev'
+  end
+end, { noremap = true, silent = true })
