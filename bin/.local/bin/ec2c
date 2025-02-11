@@ -38,7 +38,7 @@ select_public_dns() {
     fi
 
     public_dns=$(jq -r ".instances[] | select(.pem_name == \"$pem_name\") | .public_dns[\"$public_dns_key\"]" "$INSTANCES_JSON")
-    echo "Selected Public DNS: $public_dns"
+    echo "Selected $public_dns_key, DNS: $public_dns"
     instance_user=$(jq -r ".instances[] | select(.pem_name == \"$pem_name\") | .user" "$INSTANCES_JSON")
     echo "Instance User: $instance_user"
 }
