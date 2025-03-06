@@ -15,6 +15,7 @@ return {
         'json',
         'bash',
         'c',
+        'odin',
         'diff',
         'html',
         'lua',
