@@ -19,7 +19,7 @@ else
 	pac_man="sudo apt"
 fi
 
-req_pas="xclip sed grep fzf stow"
+req_pas="xclip fzf stow"
 
 if [[ $1 != "no-install" ]]; then
 	echo -e "\nUpdate packages.."
