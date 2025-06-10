@@ -1,0 +1,96 @@
+--- dwm.c	2025-06-10 13:00:55.676430830 +0800
++++ dwm.c.modified	2025-06-10 12:58:50.426432691 +0800
+@@ -63,7 +63,9 @@
+ enum { SchemeNorm, SchemeSel }; /* color schemes */
+ enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
+        NetWMFullscreen, NetActiveWindow, NetWMWindowType,
+-       NetWMWindowTypeDialog, NetClientList, NetDesktopNames, NetDesktopViewport, NetNumberOfDesktops, NetCurrentDesktop, NetLast }; /* EWMH atoms */
++       NetWMWindowTypeDialog, NetClientList, NetDesktopNames,
++       NetDesktopViewport, NetNumberOfDesktops, NetCurrentDesktop,
++       NetWMDesktop, NetLast }; /* EWMH atoms */
+ enum { WMProtocols, WMDelete, WMState, WMTakeFocus, WMLast }; /* default atoms */
+ enum { ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle,
+        ClkClientWin, ClkRootWin, ClkLast }; /* clicks */
+@@ -204,6 +206,7 @@
+ static void restack(Monitor *m);
+ static void run(void);
+ static void scan(void);
++static void tagsetter(Client *c, unsigned int tags)
+ static int sendevent(Client *c, Atom proto);
+ static void sendmon(Client *c, Monitor *m);
+ static void setclientstate(Client *c, long state);
+@@ -304,7 +307,7 @@
+ 
+ 	/* rule matching */
+ 	c->isfloating = 0;
+-	c->tags = 0;
++	tagsetter(c, 0);
+ 	XGetClassHint(dpy, c->win, &ch);
+ 	class    = ch.res_class ? ch.res_class : broken;
+ 	instance = ch.res_name  ? ch.res_name  : broken;
+@@ -326,7 +329,7 @@
+ 		XFree(ch.res_class);
+ 	if (ch.res_name)
+ 		XFree(ch.res_name);
+-	c->tags = c->tags & TAGMASK ? c->tags & TAGMASK : c->mon->tagset[c->mon->seltags];
++	tagsetter(c, c->tags & TAGMASK ? c->tags & TAGMASK : c->mon->tagset[c->mon->seltags]);
+ }
+ 
+ int
+@@ -1100,7 +1103,7 @@
+ 	updatetitle(c);
+ 	if (XGetTransientForHint(dpy, w, &trans) && (t = wintoclient(trans))) {
+ 		c->mon = t->mon;
+-		c->tags = t->tags;
++		tagsetter(c, t->tags);
+ 	} else {
+ 		c->mon = selmon;
+ 		applyrules(c);
+@@ -1514,7 +1517,7 @@
+ 	detach(c);
+ 	detachstack(c);
+ 	c->mon = m;
+-	c->tags = m->tagset[m->seltags]; /* assign tags of target monitor */
++	tagsetter(c, m->tagset[m->seltags]); /* assign tags of target monitor */
+ 	attachBelow(c);
+ 	attachstack(c);
+ 	focus(NULL);
+@@ -1522,6 +1525,25 @@
+ }
+ 
+ void
++setclientdesktop(Client *c) {
++    long data[] = { -1 };
++    for (int i = 0; i < TAGSLENGTH; i++) {
++        if (c->tags & (1 << i)) {
++            data[0] = i;
++            break;
++        }
++    }
++    XChangeProperty(dpy, c->win, netatom[NetWMDesktop], XA_CARDINAL, 32,
++                    PropModeReplace, (unsigned char *)data, 1);
++}
++
++void
++tagsetter(Client *c, unsigned int tags) {
++    c->tags = tags;
++    setclientdesktop(c);
++}
++
++void
+ setclientstate(Client *c, long state)
+ {
+ 	long data[] = { state, None };
+@@ -1718,6 +1740,7 @@
+ 	netatom[NetNumberOfDesktops] = XInternAtom(dpy, "_NET_NUMBER_OF_DESKTOPS", False);
+ 	netatom[NetCurrentDesktop] = XInternAtom(dpy, "_NET_CURRENT_DESKTOP", False);
+ 	netatom[NetDesktopNames] = XInternAtom(dpy, "_NET_DESKTOP_NAMES", False);
++	netatom[NetWMDesktop] = XInternAtom(dpy, "_NET_WM_DESKTOP", False);
+ 	/* init cursors */
+ 	cursor[CurNormal] = drw_cur_create(drw, XC_left_ptr);
+ 	cursor[CurResize] = drw_cur_create(drw, XC_sizing);
+@@ -2346,3 +2369,4 @@
+ 	XCloseDisplay(dpy);
+ 	return EXIT_SUCCESS;
+ }
++
