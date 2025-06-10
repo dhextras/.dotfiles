@@ -13,6 +13,7 @@ declare -A colors=(
 )
 
 SEPARATOR="   %{F${colors[orange]}}󰎇󰎇󰎇%{F-}"
+SEPARATOR2="%{F${colors[purple]}}%{T7}~~~%{T-}%{F-}"
 ICON_PLAY="%{F${colors[primary]}}%{T2}%{T-}%{F-} "
 ICON_PAUSE="%{F${colors[primary]}}%{T1}%{T-}%{F-}  "
 ICON_NOMUSIC="%{F${colors[disabled]}}%{T2}󰟎%{T-}%{F-}  "
@@ -43,7 +44,7 @@ get_display_length() {
 
 	local icon_visible=$(echo "$icon" | sed 's/%{[^}]*}//g')
 	local text_visible=$(echo "$text" | sed 's/%{[^}]*}//g')
-	local available_space=$((max_len - ${#icon_visible} - 4)) # NOTE: 4 for the ...
+	local available_space=$((max_len - ${#icon_visible} - 2))
 
 		if [[ ${#text_visible} -le $available_space ]]; then
 			echo "$text"
@@ -71,7 +72,7 @@ get_display_length() {
 					((i++))
 				fi
 			done
-			echo "$result ..."
+			echo "$result $SEPARATOR2"
 		fi
 	}
 
@@ -90,7 +91,7 @@ scroll_text() {
 	local display_text="${padding}${text}${padding}"
 
 	local icon_visible=$(echo "$icon" | sed 's/%{[^}]*}//g')
-	local visible_max=$((max - ${#icon_visible}))
+	local visible_max=$((max - ${#icon_visible} - 2))
 		local display_visible=$(get_visible_length "$display_text")
 
 		if [[ $display_visible -le $visible_max ]]; then
@@ -121,12 +122,6 @@ scroll_text() {
 			fi
 		done
 
-		# echo "=== text_array contents ==="
-		# for idx in "${!text_array[@]}"; do
-		#   			printf "[%d]: '%s'\n" "$idx" "${text_array[$idx]}"
-		# done
-		# echo "==========================="
-
 		local pos=0
 		local stripped_formatters=""
 		while true; do
@@ -149,7 +144,7 @@ scroll_text() {
 				((array_pos++))
 			done
 
-			echo "$icon$stripped_formatters$display"
+			echo "$icon$stripped_formatters$display $SEPARATOR2"
 			sleep "$delay"
 
 			next_pos=$((pos + 1))
