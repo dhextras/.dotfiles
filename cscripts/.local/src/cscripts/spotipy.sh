@@ -1,23 +1,16 @@
 #!/bin/bash
 
 MAX_LEN=36
-SCROLL_DELAY=0.05
-SEPARATOR="   󰎇󰎇󰎇   "
+SCROLL_DELAY=0.35
+SEPARATOR="   󰎇󰎇󰎇"
 
 declare -A colors=(
 	["primary"]="#cdd6f4"
-	["secondary"]="#9399b2"
 	["disabled"]="#636578"
 	["blue"]="#89b4fa"
-	["brblue"]="#7da6ff"
-	["red"]="#f38ba8"
-	["brred"]="#f7768e"
-	["yellow"]="#f9e2af"
 	["orange"]="#fab387"
 	["green"]="#a6e3a1"
 	["purple"]="#cba6f7"
-	["aqua"]="#94e2d5"
-	["alert"]="#bd2c40"
 )
 
 ICON_PLAY="%{F${colors[primary]}}%{T2}%{T-}%{F-} "
@@ -29,8 +22,9 @@ repeat_text() {
 	local times="$2"
 	local result="$text"
 	for ((i=1; i<times; i++)); do
-		result+="$SEPARATOR$text"
+		result+="$SEPARATOR   $text"
 	done
+	result+="$SEPARATOR"
 	echo "$result"
 }
 
