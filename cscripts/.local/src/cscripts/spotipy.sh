@@ -2,7 +2,6 @@
 
 MAX_LEN=36
 SCROLL_DELAY=0.35
-SEPARATOR="   󰎇󰎇󰎇"
 
 declare -A colors=(
 	["primary"]="#cdd6f4"
@@ -13,8 +12,9 @@ declare -A colors=(
 	["purple"]="#cba6f7"
 )
 
+SEPARATOR="   %{F${colors[orange]}}󰎇󰎇󰎇%{F-}"
 ICON_PLAY="%{F${colors[primary]}}%{T2}%{T-}%{F-} "
-ICON_PAUSE="%{F${colors[primary]}}%{T2}%{T-}%{F-}  "
+ICON_PAUSE="%{F${colors[primary]}}%{T1}%{T-}%{F-}  "
 ICON_NOMUSIC="%{F${colors[disabled]}}%{T2}󰟎%{T-}%{F-}  "
 
 repeat_text() {
@@ -31,9 +31,9 @@ repeat_text() {
 colorize_text() {
 	local artist="$1"
 	local title="$2"
-	local colored_artist="%{F${colors[green]}}$artist%{F-}"
+	local colored_artist="%{F${colors[blue]}}$artist%{F-}"
 	local colored_title="%{F${colors[green]}}$title%{F-}"
-	echo "$colored_artist %{F${colors[blue]}}- %{F-}$colored_title"
+	echo "$colored_artist %{F${colors[orange]}}- %{F-}$colored_title"
 }
 
 get_display_length() {
