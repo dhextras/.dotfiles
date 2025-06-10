@@ -53,38 +53,54 @@ check_dependencies() {
 	return 0
 }
 
+remove_conflicts() {
+	local errors="$1"
+	while IFS= read -r line; do
+		conflict_path=$(echo "$line" | grep -oP "over existing target \K.*(?= since)")
+		if [[ -n "$conflict_path" ]]; then
+			full_path="$HOME/$conflict_path"
+			log "Removing: $full_path"
+
+			if [ -e "$full_path" ] || [ -L "$full_path" ]; then
+				sudo -k sudo rm -rf "$full_path"
+			fi
+		fi
+	done <<< "$(echo "$errors" | grep 'cannot stow')"
+}
+
+
 stow_config() {
 	local folder="$1"
 	local target_path="$HOME/$folder"
 
-	if [ -d "$target_path" ] || [ -f "$target_path" ]; then
-		warn "Target already exists: $target_path"
-		read -p "Do you want to remove existing and stow? (y/N): " -n 1 -r
+	log "Checking stow conflicts for: $folder"
+
+	local errors
+	errors=$(stow "$folder" 2>&1 >/dev/null)
+
+	if echo "$errors" | grep -q "cannot stow"; then
+		warn "stowing $folder would cause conflicts:"
+		echo "$errors" | grep "cannot stow" | sed 's/^/  * /'
+
+		read -p "Do you want to remove conflicting files and try again? (y/N): " -n 1 -r
 		echo
 		if [[ $REPLY =~ ^[Yy]$ ]]; then
-			log "Removing existing: $target_path"
-			rm -rf "$target_path"
+			remove_conflicts "$errors"
+			if stow "$folder"; then
+				log "Successfully stowed: $folder after removing conflicts"
+			else
+				error "Failed to stow: $folder after removing conflicts"
+			fi
 		else
-			warn "Skipping stow for: $folder"
+			warn "Skipping stow for: $folder due to conflicts"
 			return 0
 		fi
-	fi
-
-	log "Stowing: $folder"
-	if stow -D "$folder" 2>/dev/null; then
-		if stow "$folder"; then
-			log "Successfully stowed: $folder"
-		else
-			error "Failed to stow: $folder"
-		fi
 	else
-		if stow "$folder"; then
-			log "Successfully stowed: $folder"
-		else
-			error "Failed to stow: $folder"
-		fi
+		log "Stowing: $folder"
+		log "Successfully stowed: $folder"
 	fi
 }
+
 
 add_key_binding() {
 	local binding="$1"
