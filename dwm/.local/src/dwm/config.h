@@ -15,7 +15,14 @@ static const int topbar             = 1;            /* 0 means bottom bar */
 static const int usealtbar          = 1;            /* 1 means use non-dwm status bar */
 static const char *altbarclass      = "Polybar";    /* Alternate bar class name */
 static const char *altbarcmd        = "$HOME/.local/src/cscripts/polybar.sh";  /* Alternate bar launch command FIXME: Remvoe this shit*/ 
-static const char *fonts[]          = { "ComicShannsMono Nerd Font:size=12", "ComicShannsMono Nerd Font:size=18" };
+static const char *fonts[] = {
+    "ComicShannsMono Nerd Font:size=12",
+    "ComicShannsMono Nerd Font:size=18",
+    "Noto Sans:size=12",                        // general Unicode fallback
+    "Noto Sans CJK JP:size=12",                 // Japanese / CJK fallback
+    "Noto Color Emoji:size=12",                 // emoji fallback
+    "Noto Sans:size=12"                         // generic fallback for most scripts
+};
 static const char dmenufont[]       = "monospace:size=10";
 static const char col_bg[]          = "#1e1e2e";    // Background
 static const char col_fg[]          = "#d4be98";    // Foreground
