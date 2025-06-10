@@ -15,7 +15,7 @@
  static void restack(Monitor *m);
  static void run(void);
  static void scan(void);
-+static void tagsetter(Client *c, unsigned int tags)
++static void tagsetter(Client *c, unsigned int tags);
  static int sendevent(Client *c, Atom proto);
  static void sendmon(Client *c, Monitor *m);
  static void setclientstate(Client *c, long state);
