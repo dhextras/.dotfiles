@@ -121,7 +121,14 @@ scroll_text() {
 			fi
 		done
 
+		# echo "=== text_array contents ==="
+		# for idx in "${!text_array[@]}"; do
+		#   			printf "[%d]: '%s'\n" "$idx" "${text_array[$idx]}"
+		# done
+		# echo "==========================="
+
 		local pos=0
+		local stripped_formatters=""
 		while true; do
 			local display=""
 			local visible_count=0
@@ -142,13 +149,26 @@ scroll_text() {
 				((array_pos++))
 			done
 
-			echo "$icon$display"
+			echo "$icon$stripped_formatters$display"
 			sleep "$delay"
 
-			pos=$((pos + 1))
-			if [[ $pos -ge ${#text_array[@]} ]]; then
-				pos=0
+			next_pos=$((pos + 1))
+
+			while [[ $next_pos -lt ${#text_array[@]} && "${text_array[$next_pos]}" =~ ^%\{.*\}$ ]]; do
+				stripped_formatters="${text_array[$next_pos]}"
+				((next_pos++))
+			done
+
+			if [[ $next_pos -ge ${#text_array[@]} ]]; then
+				next_pos=0
+				stripped_formatters=""
+				while [[ $next_pos -lt ${#text_array[@]} && "${text_array[$next_pos]}" =~ ^%\{.*\}$ ]]; do
+					stripped_formatters+="${text_array[$next_pos]}"
+					((next_pos++))
+				done
 			fi
+
+			pos=$next_pos
 		done
 	}
 
