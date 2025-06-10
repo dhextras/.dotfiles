@@ -56,8 +56,9 @@ static const Rule rules[] = {
 	/* class               instance    title       tags mask     isfloating   monitor */
 	{ "Gimp",              NULL,       NULL,       0,            1,           -1 },
 	{ "Google-chrome",     NULL,       NULL,       1 << 1,       0,           -1 },
+	{ "Firefox",           NULL,       NULL,       1 << 1,       0,           -1 },
+	{ "Whatsapp",          NULL,       NULL,       1 << 2,       0,           -1 },
 	{ "Spotify",           NULL,       NULL,       1 << 3,       0,           -1 },
-	{ "Firefox",           NULL,       NULL,       1 << 3,       0,           -1 },
 };
 
 /* layout(s) */
@@ -161,6 +162,9 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 	{ MODKEY|ShiftMask,             XK_f,      fullscreen,     {0} },
+	{ MODKEY|Mod1Mask,              XK_p,      spawn,          SHCMD("playerctl previous") },
+	{ MODKEY|Mod1Mask,              XK_s,      spawn,          SHCMD("playerctl play-pause") },
+	{ MODKEY|Mod1Mask,              XK_n,      spawn,          SHCMD("playerctl next") },
 	{ MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("flameshot gui") },
 	{ Mod4Mask,                     XK_s,      spawn,          SHCMD("flameshot gui") },
 	{ Mod4Mask,                     XK_F5,     spawn,          SHCMD("~/.local/src/cscripts/tagstoggle.sh") },
