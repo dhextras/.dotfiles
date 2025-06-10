@@ -5,13 +5,7 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static const char *fonts[] = {
-    "ComicShannsMono Nerd Font:pixelsize=19:antialias=true:autohint=true",
-    "Noto Sans:pixelsize=19:antialias=true:autohint=true",
-    "Noto Sans CJK JP:pixelsize=19:antialias=true:autohint=true",
-    "Noto Color Emoji:pixelsize=19:antialias=true:autohint=true",
-};
-
+static char *font = "ComicShannsMono Nerd Font:pixelsize=19:antialias=true:autohint=true";
 static int lineheight = 19;
 static int linewidth = 19;
 
