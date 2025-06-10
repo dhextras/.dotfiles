@@ -1,5 +1,5 @@
---- dwm.c	2025-06-10 13:00:55.676430830 +0800
-+++ dwm.c.modified	2025-06-10 12:58:50.426432691 +0800
+--- a/dwm.c	2025-06-10 13:00:55.676430830 +0800
++++ b/dwm.c.modified	2025-06-10 12:58:50.426432691 +0800
 @@ -63,7 +63,9 @@
  enum { SchemeNorm, SchemeSel }; /* color schemes */
  enum { NetSupported, NetWMName, NetWMState, NetWMCheck,

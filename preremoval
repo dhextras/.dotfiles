@@ -45,7 +45,7 @@ remove_key_binding() {
 	local binding="$1"
 	local modifier_key="f"
 
-	if grep -q "bind -x .*\\C.*\\$binding" "$BASHRC_FILE"; then
+	if grep -q "bind -x .*C.*$binding" "$BASHRC_FILE"; then
 		log "Removing binding: $binding"
 		sed -i "\\|bind -x .*\\C.*\\$binding|d" "$BASHRC_FILE"
 	else
