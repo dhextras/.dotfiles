@@ -1,21 +1,14 @@
 #!/bin/bash
 
-STATE_FILE="/tmp/polybar_tags_state"
+FLAG="$HOME/.cache/polybar_show_all_tags"
+[[ ! -f "$FLAG" ]] && echo "0" > "$FLAG"
 
-# Default state
-[ ! -f "$STATE_FILE" ] && echo "active" > "$STATE_FILE"
+current=$(cat "$FLAG")
 
-STATE=$(cat "$STATE_FILE")
-
-if [ "$STATE" = "active" ]; then
-    # Show all tags
-    polybar-msg action tagsbar hook 2
-    echo "all" > "$STATE_FILE"
-    polybar-msg cmd restart  # force reload to apply
+if [[ "$current" == "1" ]]; then
+  echo "0" > "$FLAG"
 else
-    # Show only active
-    polybar-msg action tagsbar hook 1
-    echo "active" > "$STATE_FILE"
-    polybar-msg cmd restart
+  echo "1" > "$FLAG"
 fi
 
+~/.local/src/cscripts/tagsmode.sh
