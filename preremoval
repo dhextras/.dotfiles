@@ -1,53 +1,225 @@
 #!/usr/bin/bash
 
-# configure the variables & removal packages
-if [[ -z $STOWFOLDERS ]]; then
-	STOWFOLDERS="bin,tmux,nvim"
-fi
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+NC='\033[0m'
 
-if [[ -z $DOTFILES ]]; then
-	DOTFILES="${XDG_CONFIG_HOME:-$HOME}"/.dotfiles
-fi
+DOTFILES="${XDG_CONFIG_HOME:-$HOME}/.dotfiles"
+BASHRC_FILE="${XDG_CONFIG_HOME:-$HOME}/.bashrc"
+EXCLUDED_FILES=".git .gitignore README.md install preremoval nvim"
+MODULAR_CONFIGS="dwm st"
+DEPENDENCIES="xclip fzf stow git make gcc patch nvim sed"
+FAILED_OPERATIONS=0
 
-if [[ -z $BASHRC_FILE ]]; then
-	BASHRC_FILE="${XDG_CONFIG_HOME:-$HOME}"/.bashrc
-fi
+log() {
+	echo -e "${GREEN}[LOG]${NC} $1"
+}
 
-if [[ $# -eq 1 ]]; then
-	pac_man=$1
-else
-	pac_man="sudo apt"
-fi
+warn() {
+	echo -e "${YELLOW}[WARN]${NC} $1"
+}
 
-req_pas="xclip fzf stow"
+error() {
+	echo -e "${RED}[ERROR]${NC} $1"
+	((FAILED_OPERATIONS++))
+}
 
-echo "source $BASHRC_FILE" | xclip -selection clipboad
-echo -e "\nRemoving \`$req_pas\`"
-$pac_man remove $req_pas
+info() {
+	echo -e "${BLUE}[INFO]${NC} $1"
+}
 
-# Remove the Sym links
-echo -e "\nUnstowing configurations.."
-pushd $DOTFILES
-for folder in $(echo $STOWFOLDERS | sed 's/,/ /g') 
-do
-	echo "unstow $folder"
-	stow -D $folder
-done
-popd
+remove_alias() {
+	local alias_name="$1"
 
-# Remove bindings
-remove_key_binding() {
-	local modifier_key="f"
-	local binding="$1"
-
-	if grep -q "bind -x .*\\C.*\\$binding" "$BASHRC_FILE"; then
-		echo "Removing binding for \`$binding\`"
-		sed -i "\|bind -x .*\\C.*\\$binding|d" "$BASHRC_FILE"
+	if grep -q "^alias $alias_name=" "$BASHRC_FILE"; then
+		log "Removing alias: $alias_name"
+		sed -i "/^alias $alias_name=/d" "$BASHRC_FILE"
+	else
+		info "Alias not found: $alias_name"
 	fi
 }
 
-echo -e "\nRemove bindings..."
-remove_key_binding "C-h"
-remove_key_binding "C-f"
+remove_key_binding() {
+	local binding="$1"
+	local modifier_key="f"
 
-echo -e "\nSource your \`$BASHRC_FILE\` to disable old bindings: \`source $BASHRC_FILE\`\njust HIT that C-v 🙃....."
+	if grep -q "bind -x .*\\C.*\\$binding" "$BASHRC_FILE"; then
+		log "Removing binding: $binding"
+		sed -i "\\|bind -x .*\\C.*\\$binding|d" "$BASHRC_FILE"
+	else
+		info "Binding not found: $binding"
+	fi
+}
+
+remove_bindings_and_aliases() {
+	echo
+	log "Removing key bindings and aliases..."
+
+	remove_key_binding "C-h"
+	remove_key_binding "C-f"
+	remove_key_binding "C-e"
+	remove_key_binding "C-g"
+
+	remove_alias "mdwm"
+	remove_alias "mst"
+
+	log "Bindings and aliases removed"
+}
+
+reverse_patches() {
+	local config_dir="$1"
+	local build_path="$HOME/.local/src/$config_dir"
+	local patches_dir="$build_path/patches"
+
+	if [ ! -d "$patches_dir" ]; then
+		info "No patches directory found for: $config_dir"
+		return 0
+	fi
+
+	cd "$build_path" || return 1
+	log "Reversing patches for: $config_dir"
+
+	local patches=($(ls "$patches_dir"/* 2>/dev/null | sort -r))
+
+	for patch_file in "${patches[@]}"; do
+		if [ -f "$patch_file" ]; then
+			log "Reversing patch: $(basename "$patch_file")"
+			if ! patch -R -p1 -i "$patch_file"; then
+				warn "Failed to reverse patch: $(basename "$patch_file")"
+			fi
+		fi
+	done
+
+	rm -f *.rej *.orig 2>/dev/null
+	cd - > /dev/null
+}
+
+get_stowable_folders() {
+	local folders=()
+	for item in "$DOTFILES"/*; do
+		if [ -d "$item" ]; then
+			local basename=$(basename "$item")
+			local excluded=false
+			for exclude in $EXCLUDED_FILES; do
+				if [ "$basename" = "$exclude" ]; then
+					excluded=true
+					break
+				fi
+			done
+			if [ "$excluded" = false ]; then
+				folders+=("$basename")
+			fi
+		fi
+	done
+	echo "${folders[@]}"
+}
+
+unstow_config() {
+	local folder="$1"
+
+	log "Unstowing: $folder"
+	if stow -D "$folder" 2>/dev/null; then
+		log "Successfully unstowed: $folder"
+	else
+		warn "Failed to unstow or not stowed: $folder"
+	fi
+}
+
+handle_unstowing() {
+	echo
+	log "Starting unstowing process..."
+
+	if ! cd "$DOTFILES"; then
+		error "Failed to change to dotfiles directory: $DOTFILES"
+		return 1
+	fi
+
+	local available_folders=($(get_stowable_folders))
+
+	for folder in "${available_folders[@]}"; do
+		unstow_config "$folder"
+	done
+
+	cd - > /dev/null
+}
+
+clean_build_modular() {
+	local config_dir="$1"
+	local build_path="$HOME/.local/src/$config_dir"
+
+	echo
+	log "Cleaning modular configuration: $config_dir"
+
+	if [ ! -d "$build_path" ]; then
+		warn "Configuration directory not found: $build_path"
+		return 0
+	fi
+
+	cd "$build_path" || return 1
+
+	if ! sudo -k; then
+		error "Failed to reset sudo credentials for: $config_dir"
+		cd - > /dev/null
+		return 1
+	fi
+
+	log "Cleaning and installing vanilla: $config_dir"
+	if sudo make clean install; then
+		log "Successfully cleaned and installed vanilla: $config_dir"
+	else
+		error "Failed to clean and install: $config_dir"
+	fi
+
+	cd - > /dev/null
+}
+
+show_usage() {
+	echo "Usage: $0"
+	echo
+	echo "This script removes all dotfiles configurations:"
+	echo "  - Removes key bindings and aliases from .bashrc"
+	echo "  - Reverses patches for modular configs (dwm, st)"
+	echo "  - Unstows all stowed configurations"
+	echo "  - Cleans and reinstalls vanilla modular configs"
+}
+
+main() {
+	if [ $# -gt 0 ]; then
+		show_usage
+		exit 1
+	fi
+
+	log "Starting dotfiles removal process..."
+
+	remove_bindings_and_aliases
+
+	for modular in $MODULAR_CONFIGS; do
+		if [ -d "$HOME/.local/src/$modular" ]; then
+			reverse_patches "$modular"
+		fi
+	done
+
+	handle_unstowing
+
+	for modular in $MODULAR_CONFIGS; do
+		if [ -d "$HOME/.local/src/$modular" ]; then
+			clean_build_modular "$modular"
+		fi
+	done
+
+	echo
+	if [ $FAILED_OPERATIONS -eq 0 ]; then
+		log "Removal completed successfully!"
+		echo "source $BASHRC_FILE" | xclip -selection clipboard
+		info "Source your \`$BASHRC_FILE\` to disable old bindings: \`source $BASHRC_FILE\`"
+		info "Just HIT that C-v 🙃....."
+	else
+		error "Some operations failed ($FAILED_OPERATIONS total)"
+	fi
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+	main "$@"
+fi

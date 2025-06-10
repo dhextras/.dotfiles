@@ -1,69 +1,379 @@
 #!/usr/bin/bash
 
-# configure the variables & required packages
-if [[ -z $STOWFOLDERS ]]; then
-	STOWFOLDERS="bin,tmux,nvim"
-fi
+# Color codes for logging
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+NC='\033[0m'
 
-if [[ -z $DOTFILES ]]; then
-	DOTFILES="${XDG_CONFIG_HOME:-$HOME}"/.dotfiles
-fi
+# Global variables
+DOTFILES="${XDG_CONFIG_HOME:-$HOME}/.dotfiles"
+BASHRC_FILE="${XDG_CONFIG_HOME:-$HOME}/.bashrc"
+EXCLUDED_FILES=".git .gitignore README.md install preremoval nvim"
+MODULAR_CONFIGS="dwm st"
+DEPENDENCIES="xclip fzf stow git make gcc patch nvim sed"
+FAILED_OPERATIONS=0
 
-if [[ -z $BASHRC_FILE ]]; then
-	BASHRC_FILE="${XDG_CONFIG_HOME:-$HOME}"/.bashrc
-fi
-
-if [[ $# -eq 1 ]]; then
-	pac_man=$1
-else
-	pac_man="sudo apt"
-fi
-
-req_pas="xclip fzf stow"
-
-if [[ $1 != "no-install" ]]; then
-	echo -e "\nUpdate packages.."
-	$pac_man update
-	echo -e "\nInstalling \`$req_pas\`"
-	$pac_man install $req_pas -y
-fi
-
-
-# Sym link the Configs
-echo -e "\nStowing configurations.."
-pushd $DOTFILES
-for folder in $(echo $STOWFOLDERS | sed 's/,/ /g') 
-do
-	echo "stow $folder"
-	stow -D $folder
-	stow $folder
-done
-popd
-
-# Add bindings
-add_key_binding() {
-	local modifier_key="f"
-	local binding="$1"
-	local command="$2"
-
-	if grep -q "bind -x .*\\C.*\\$binding" "$BASHRC_FILE"; then
-		echo "Removing existing binding for \`$binding\`"
-		sed -i "\|bind -x .*\\C.*\\$binding|d" "$BASHRC_FILE"
-	fi
-
-	echo bind -x "'\"\\C-$modifier_key\\$binding\": \"$command\"'" >> $BASHRC_FILE
-	echo "Added binding: \`$binding\`"
+log() {
+	echo -e "${GREEN}[LOG]${NC} $1"
 }
 
-echo -e "\nConfiguring bindings..."
-# fuzzy history
-add_key_binding "C-h" "history | sort -rn | fzf --padding=5,0,0,0 | sed '\''s/^[ ]*[0-9]*[ ]*//'\'' | xclip -selection clipboard; echo Copied: \$(xclip -o -selection clipboard); echo"
-# fuzzy tmux sessionizer
-add_key_binding "C-f" "~/.local/bin/tmux-sessionizer"
-# open editor in the current directory
-add_key_binding "C-e" "nvim ."
-# fuzzy directory changer
-add_key_binding "C-g" "cd \\\"\$(find ${XDG_CONFIG_HOME:-$HOME}/ /mnt/c/Users/Asus/Downloads /mnt/d/Data -type d | fzf --padding=5,0,0,0)\\\"; clear; echo Current Dir: \$(pwd)"
+warn() {
+	echo -e "${YELLOW}[WARN]${NC} $1"
+}
 
-echo "source $BASHRC_FILE" | xclip -selection clipboad
-echo -e "\nSource your \`$BASHRC_FILE\` to enable new bindings: \`source $BASHRC_FILE\`\njust HIT that C-v 🙃....."
+error() {
+	echo -e "${RED}[ERROR]${NC} $1"
+	((FAILED_OPERATIONS++))
+}
+
+info() {
+	echo -e "${BLUE}[INFO]${NC} $1"
+}
+
+check_dependencies() {
+	echo
+	log "Checking dependencies..."
+	local missing_deps=()
+
+	for dep in $DEPENDENCIES; do
+		if ! command -v "$dep" &> /dev/null; then
+			missing_deps+=("$dep")
+		fi
+	done
+
+	if [ ${#missing_deps[@]} -ne 0 ]; then
+		error "Missing dependencies: ${missing_deps[*]}"
+		info "Please install missing dependencies first"
+		return 1
+	fi
+
+	log "All dependencies are available"
+	return 0
+}
+
+stow_config() {
+	local folder="$1"
+	local target_path="$HOME/$folder"
+
+	if [ -d "$target_path" ] || [ -f "$target_path" ]; then
+		warn "Target already exists: $target_path"
+		read -p "Do you want to remove existing and stow? (y/N): " -n 1 -r
+		echo
+		if [[ $REPLY =~ ^[Yy]$ ]]; then
+			log "Removing existing: $target_path"
+			rm -rf "$target_path"
+		else
+			warn "Skipping stow for: $folder"
+			return 0
+		fi
+	fi
+
+	log "Stowing: $folder"
+	if stow -D "$folder" 2>/dev/null; then
+		if stow "$folder"; then
+			log "Successfully stowed: $folder"
+		else
+			error "Failed to stow: $folder"
+		fi
+	else
+		if stow "$folder"; then
+			log "Successfully stowed: $folder"
+		else
+			error "Failed to stow: $folder"
+		fi
+	fi
+}
+
+add_key_binding() {
+	local binding="$1"
+	local command="$2"
+	local modifier_key="f"
+
+	if grep -q "bind -x .*C.*$binding" "$BASHRC_FILE"; then
+		log "Updating existing binding for: $binding"
+		sed -i "\\|bind -x .*\\C.*\\$binding|d" "$BASHRC_FILE"
+	else
+		log "Adding new binding for: $binding"
+	fi
+
+	echo "bind -x '\"\\C-$modifier_key\\$binding\": \"$command\"'" >> "$BASHRC_FILE"
+}
+
+add_alias() {
+	local alias_name="$1"
+	local alias_command="$2"
+
+	if grep -q "^alias $alias_name=" "$BASHRC_FILE"; then
+		log "Updating existing alias: $alias_name"
+		sed -i "/^alias $alias_name=/d" "$BASHRC_FILE"
+	else
+		log "Adding new alias: $alias_name"
+	fi
+
+	echo "alias $alias_name=\"$alias_command\"" >> "$BASHRC_FILE"
+}
+
+configure_bindings_and_aliases() {
+	echo
+	log "Configuring key bindings and aliases..."
+
+	add_key_binding "C-h" "history | sort -rn | fzf --padding=5,0,0,0 | sed '\''s/^[ ]*[0-9]*[ ]*//'\'' | xclip -selection clipboard; echo Copied: \$(xclip -o -selection clipboard); echo"
+	add_key_binding "C-f" "~/.local/bin/tmux-sessionizer"
+	add_key_binding "C-e" "nvim ."
+	add_key_binding "C-g" "cd \\\"\$(find \${XDG_CONFIG_HOME:-\$HOME}/ /mnt/c/Users/Asus/Downloads /mnt/d/Data -type d 2>/dev/null | fzf --padding=5,0,0,0)\\\"; clear; echo Current Dir: \$(pwd)"
+
+	add_alias "mdwm" "bash -c \\\"if ! sudo -k; then echo 'Failed to reset sudo credentials'; exit 1; fi; cd ~/.local/src/dwm && sudo make clean install && cd -\\\""
+	add_alias "mst" "bash -c \\\"if ! sudo -k; then echo 'Failed to reset sudo credentials'; exit 1; fi; cd ~/.local/src/st && sudo make clean install && cd -\\\""
+
+	log "Bindings and aliases configured successfully"
+}
+
+get_stowable_folders() {
+	local folders=()
+	for item in "$DOTFILES"/*; do
+		if [ -d "$item" ]; then
+			local basename=$(basename "$item")
+			local excluded=false
+			for exclude in $EXCLUDED_FILES; do
+				if [ "$basename" = "$exclude" ]; then
+					excluded=true
+					break
+				fi
+			done
+			if [ "$excluded" = false ]; then
+				folders+=("$basename")
+			fi
+		fi
+	done
+	echo "${folders[@]}"
+}
+
+handle_stowing() {
+	local targets=("$@")
+
+	echo
+	log "Starting stowing process..."
+
+	if ! cd "$DOTFILES"; then
+		error "Failed to change to dotfiles directory: $DOTFILES"
+		return 1
+	fi
+
+	local available_folders=($(get_stowable_folders))
+
+	if [ ${#targets[@]} -eq 0 ]; then
+		warn "No targets specified for stowing"
+		return 0
+	fi
+
+	for target in "${targets[@]}"; do
+		if [[ " ${available_folders[*]} " == *" $target "* ]]; then
+			stow_config "$target"
+		else
+			error "Folder not available for stowing: $target"
+		fi
+	done
+
+	cd - > /dev/null
+}
+
+apply_patches() {
+	local config_dir="$1"
+	local build_path="$HOME/.local/src/$config_dir"
+	local patches_dir="$build_path/patches"
+
+	if [ ! -d "$patches_dir" ]; then
+		info "No patches directory found for: $config_dir"
+		return 0
+	fi
+
+	cd "$build_path" || return 1
+	log "Applying patches for: $config_dir"
+
+	for patch_file in "$patches_dir"/*; do
+		if [ -f "$patch_file" ]; then
+			log "Applying patch: $(basename "$patch_file")"
+			if ! patch -F5 -N -i "$patch_file"; then
+				warn "Patch application had issues: $(basename "$patch_file")"
+			fi
+		fi
+	done
+
+	# Check for .rej and .orig files
+	local rej_files=(*.rej)
+	local orig_files=(*.orig)
+
+	if [ -f "${rej_files[0]}" ] || [ -f "${orig_files[0]}" ]; then
+		local rej_count=0
+		local orig_count=0
+
+		[ -f "${rej_files[0]}" ] && rej_count=$(ls -1 *.rej 2>/dev/null | wc -l)
+		[ -f "${orig_files[0]}" ] && orig_count=$(ls -1 *.orig 2>/dev/null | wc -l)
+
+		warn "Found $rej_count .rej files and $orig_count .orig files"
+		read -p "Do you want to remove these files? (y/N): " -n 1 -r
+		echo
+
+		if [[ $REPLY =~ ^[Yy]$ ]]; then
+			log "Removing .rej and .orig files"
+			rm -f *.rej *.orig 2>/dev/null
+		else
+			warn "Keeping .rej and .orig files - build may have issues"
+		fi
+	fi
+
+	cd - > /dev/null
+}
+
+build_modular() {
+	local config_dir="$1"
+	local build_path="$HOME/.local/src/$config_dir"
+
+	echo
+	log "Building modular configuration: $config_dir"
+
+	if [ ! -d "$build_path" ]; then
+		error "Configuration directory not found: $build_path"
+		return 1
+	fi
+
+	apply_patches "$config_dir"
+	cd "$build_path" || return 1
+
+	if ! sudo -k; then
+		error "Failed to reset sudo credentials for: $config_dir"
+		cd - > /dev/null
+		return 1
+	fi
+
+	log "Building: $config_dir"
+	if sudo make clean install; then
+		log "Successfully built: $config_dir"
+	else
+		error "Failed to build: $config_dir"
+	fi
+
+	cd - > /dev/null
+}
+
+show_usage() {
+	echo "Usage: $0 [all|no-mod|setup|dwm st polybar ...]"
+	echo
+	echo "Commands:"
+	echo "  all                    - Setup bindings/aliases, stow all configs, build modular configs"
+	echo "  no-mod                 - Setup bindings/aliases, stow all configs (no modular building)"
+	echo "  setup                  - Setup bindings/aliases only"
+	echo "  dwm st nvim tmux ...   - Space-separated list of specific configs to stow and build"
+	echo
+	echo "Examples:"
+	echo "  $0 all"
+	echo "  $0 setup"
+	echo "  $0 dwm st"
+	echo "  $0 no-mod"
+}
+
+main() {
+	local args=("$@")
+
+	if [ ${#args[@]} -eq 0 ]; then
+		show_usage
+		exit 1
+	fi
+
+	if ! check_dependencies; then
+		exit 1
+	fi
+
+	local should_setup_bindings=false
+	local should_stow=false
+	local should_build_modular=false
+	local stow_targets=()
+	local build_targets=()
+	local has_all=false
+	local has_no_mod=false
+	local has_setup=false
+
+	for arg in "${args[@]}"; do
+		case "$arg" in
+			"all")
+				has_all=true
+				;;
+			"no-mod")
+				has_no_mod=true
+				;;
+			"setup")
+				has_setup=true
+				;;
+		esac
+	done
+
+	if [ "$has_all" = true ]; then
+		# "all" overrides everything
+		should_setup_bindings=true
+		should_stow=true
+		should_build_modular=true
+		stow_targets=($(get_stowable_folders))
+		for modular in $MODULAR_CONFIGS; do
+			if [[ " ${stow_targets[*]} " == *" $modular "* ]]; then
+				build_targets+=("$modular")
+			fi
+		done
+	elif [ "$has_no_mod" = true ]; then
+		# "no-mod" sets up and stows but doesn't build
+		should_setup_bindings=true
+		should_stow=true
+		stow_targets=($(get_stowable_folders))
+	else
+		# Handle setup and individual targets
+		if [ "$has_setup" = true ]; then
+			should_setup_bindings=true
+		fi
+
+		# Collect non-keyword arguments as stow targets
+		for arg in "${args[@]}"; do
+			if [[ "$arg" != "all" && "$arg" != "no-mod" && "$arg" != "setup" ]]; then
+				stow_targets+=("$arg")
+				if [[ " $MODULAR_CONFIGS " == *" $arg "* ]]; then
+					build_targets+=("$arg")
+				fi
+			fi
+		done
+
+		if [ ${#stow_targets[@]} -gt 0 ]; then
+			should_stow=true
+			should_build_modular=true
+		fi
+	fi
+
+	if [ "$should_setup_bindings" = true ]; then
+		configure_bindings_and_aliases
+	fi
+
+	if [ "$should_stow" = true ] && [ ${#stow_targets[@]} -gt 0 ]; then
+		handle_stowing "${stow_targets[@]}"
+	fi
+
+	if [ "$should_build_modular" = true ] && [ ${#build_targets[@]} -gt 0 ]; then
+		for target in "${build_targets[@]}"; do
+			build_modular "$target"
+		done
+	fi
+
+	echo
+	if [ $FAILED_OPERATIONS -eq 0 ]; then
+		log "Everything completed successfully!"
+		if [ "$should_setup_bindings" = true ]; then
+			echo "source $BASHRC_FILE" | xclip -selection clipboad
+			info "Source your \`$BASHRC_FILE\` to enable new bindings: \`source $BASHRC_FILE\`\njust HIT that C-v 🙃....."
+		fi
+	else
+		error "Some operations failed ($FAILED_OPERATIONS total)"
+	fi
+}
+
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+	main "$@"
+fi
