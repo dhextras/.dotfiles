@@ -44,7 +44,7 @@ if [[ -f "$BRIGHTNESS_FILE" && -f "$MAX_BRIGHTNESS_FILE" ]]; then
             fi
         done
 
-        echo "%{T2}󰃠%{T-}  $bar ${percent}%"  # same icon every time
+        echo "%{T2}󰃠%{T-}  $bar ${percent}%"
     done
 else
     echo "%{T2}󰃠%{T-}  N/A"

@@ -211,7 +211,7 @@ apply_patches() {
 	for patch_file in "$patches_dir"/*; do
 		if [ -f "$patch_file" ]; then
 			log "Applying patch: $(basename "$patch_file")"
-			if ! patch -F5 -N -i "$patch_file"; then
+			if ! patch -F3 -N -i "$patch_file"; then
 				warn "Patch application had issues: $(basename "$patch_file")"
 			fi
 		fi

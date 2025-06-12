@@ -108,10 +108,11 @@ index f1d86b2..5bbd733 100644
  static void togglebar(const Arg *arg);
  static void togglefloating(const Arg *arg);
  static void toggletag(const Arg *arg);
-@@ -641,6 +646,10 @@ createmon(void)
+@@ -674,7 +690,11 @@ createmon(void)
  	m->nmaster = nmaster;
  	m->showbar = showbar;
  	m->topbar = topbar;
+ 	m->bh = bh;
 +	m->gappih = gappih;
 +	m->gappiv = gappiv;
 +	m->gappoh = gappoh;
