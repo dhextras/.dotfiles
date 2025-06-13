@@ -140,6 +140,7 @@ configure_bindings_and_aliases() {
 	add_key_binding "C-e" "nvim ."
 	add_key_binding "C-g" "cd \\\"\$(find \${XDG_CONFIG_HOME:-\$HOME}/projects /mnt/dhextras -type d 2>/dev/null | fzf --padding=5,0,0,0)\\\"; clear; echo Current Dir: \$(pwd)"
 
+	add_alias "emerge" "sudo emerge "
 	add_alias "mdwm" "bash -c \\\"if ! sudo -k; then echo 'Failed to reset sudo credentials'; exit 1; fi; cd ~/.local/src/dwm && sudo make clean install && cd -\\\""
 	add_alias "mst" "bash -c \\\"if ! sudo -k; then echo 'Failed to reset sudo credentials'; exit 1; fi; cd ~/.local/src/st && sudo make clean install && cd -\\\""
 
