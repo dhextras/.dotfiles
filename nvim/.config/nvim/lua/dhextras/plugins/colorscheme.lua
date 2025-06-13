@@ -12,7 +12,7 @@ return {
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
       vim.cmd.colorscheme 'tokyonight-night'
 
-      ocal colors = {
+      local colors = {
         bg     = "#1e1e2e",
         fg     = "#d4be98",
         blue   = "#7da6ff",
