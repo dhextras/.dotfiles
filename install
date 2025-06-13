@@ -10,7 +10,7 @@ NC='\033[0m'
 # Global variables
 DOTFILES="${XDG_CONFIG_HOME:-$HOME}/.dotfiles"
 BASHRC_FILE="${XDG_CONFIG_HOME:-$HOME}/.bashrc"
-EXCLUDED_FILES=".git .gitignore README.md install preremoval nvim"
+EXCLUDED_FILES=".git .gitignore README.md install preremoval"
 MODULAR_CONFIGS="dwm st"
 DEPENDENCIES="xclip fzf stow git make gcc patch nvim sed"
 FAILED_OPERATIONS=0
