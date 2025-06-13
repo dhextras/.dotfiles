@@ -122,7 +122,7 @@ require('lazy').setup({
   -- after the plugin has been loaded:
   --  config = function() ... end
 
-  { -- Useful plugin to show you pending keybinds.
+  {                     -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     config = function() -- This is the function that runs, AFTER loading
@@ -152,6 +152,7 @@ require('lazy').setup({
   require 'dhextras.plugins.autoformat',
   require 'dhextras.plugins.autocomplete',
   require 'dhextras.plugins.colorscheme',
+  require 'dhextras.plugins.colorizer',
 
   -- NOTE: Next step on your Neovim journey: Add/Configure additional plugins for Kickstart
   --
@@ -190,6 +191,9 @@ require('lazy').setup({
       task = '📌',
       lazy = '💤 ',
     },
+  },
+  git = {
+    timeout = 600,
   },
 })
 
