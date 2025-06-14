@@ -26,7 +26,7 @@ return {
 
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
+      { 'j-hui/fidget.nvim',       opts = {} },
 
       -- Allows extra capabilities provided by nvim-cmp
       'hrsh7th/cmp-nvim-lsp',
@@ -170,6 +170,7 @@ return {
       local servers = {
         clangd = {},
         gopls = {},
+        dartls = {},
         pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -216,7 +217,7 @@ return {
         'prettier',
         'markdownlint',
         'prettierd',
-	'pyright',
+        'pyright',
         'tsserver',
         'lua_ls',
         'gopls',

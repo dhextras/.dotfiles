@@ -1,6 +1,6 @@
 #!/bin/bash
 
-used_color="#a6e3a1"
+used_color="#9ece6a"
 unused_color="#636578"
 
 # Read initial CPU stats
@@ -20,7 +20,7 @@ diff_idle=$((idle - prev_idle))
 usage=$((100 * (diff_total - diff_idle) / diff_total))
 
 if (( usage < 40 )); then
-	used_color="#a6e3a1"  # green
+	used_color="#9ece6a"  # green
 elif (( usage < 70 )); then
 	used_color="#fab387"  # orange
 elif (( usage < 85 )); then

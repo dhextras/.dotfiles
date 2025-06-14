@@ -192,9 +192,6 @@ require('lazy').setup({
       lazy = '💤 ',
     },
   },
-  git = {
-    timeout = 600,
-  },
 })
 
 -- The line beneath this is called `modeline`. See `:help modeline`

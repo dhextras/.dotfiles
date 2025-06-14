@@ -3,7 +3,7 @@
 #define FORCE_VSPLIT 1  /* nrowgrid layout: force two clients to always split vertically */
 
 /* appearance */
-static const unsigned int borderpx  = 1.8;          /* border pixel of windows */
+static const unsigned int borderpx  = 0;          /* border pixel of windows */
 static const unsigned int snap      = 48;           /* snap pixel */
 static const unsigned int gappih    = 7;            /* horiz inner gap between windows */
 static const unsigned int gappiv    = 7;            /* vert inner gap between windows */
@@ -30,7 +30,7 @@ static const char col_accent_blue[] = "#7da6ff";    // Accent Blue
 static const char col_accent_orange[] = "#fab387";  // Accent Orange
 static const char col_accent_yellow[] = "#f9e2af";  // Accent Yellow
 static const char col_accent_red[]  = "#f38ba8";    // Accent Red
-static const char col_accent_green[] = "#a6e3a1";   // Accent Green
+static const char col_accent_green[] = "#9ece6a";   // Accent Green
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
@@ -53,7 +53,7 @@ static const char *colors[][3] = {
 };
 
 /* tagging */
-static const char *tags[] = {"%{T2} %{T-}", "󰖟 ", "󰍦 ", " ", " ", "󰙯 ", "󰊠 ", "󰑓 "};
+static const char *tags[] = {"%{T2} %{T-}", "󰖟 ", "󰍦 ", " ", " ", " ", "󰙯 ", "󰊠 "};
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -66,6 +66,7 @@ static const Rule rules[] = {
 	{ "Firefox",           NULL,       NULL,       1 << 1,       0,           -1 },
 	{ "Whatsapp",          NULL,       NULL,       1 << 2,       0,           -1 },
 	{ "Spotify",           NULL,       NULL,       1 << 3,       0,           -1 },
+	{ "jetbrains-studio",  NULL,       NULL,       1 << 6,       0,           -1 },
 };
 
 /* layout(s) */

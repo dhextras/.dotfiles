@@ -1,6 +1,6 @@
 #!/bin/bash
 
-used_color="#a6e3a1"
+used_color="#9ece6a"
 
 # Read memory info
 mem_total=$(grep MemTotal /proc/meminfo | awk '{print $2}')
@@ -14,7 +14,7 @@ bar=""
 filled=$((usage * 8 / 100))
 
 if (( usage < 40 )); then
-	used_color="#a6e3a1"  # green
+	used_color="#9ece6a"  # green
 elif (( usage < 70 )); then
 	used_color="#fab387"  # orange
 elif (( usage < 85 )); then

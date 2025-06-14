@@ -8,7 +8,7 @@ declare -A colors=(
 	["disabled"]="#636578"
 	["blue"]="#89b4fa"
 	["orange"]="#fab387"
-	["green"]="#a6e3a1"
+	["green"]="#9ece6a"
 	["purple"]="#cba6f7"
 )
 

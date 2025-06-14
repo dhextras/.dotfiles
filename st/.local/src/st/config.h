@@ -104,7 +104,7 @@ static const char *colorname[] = {
 	/* 8 normal colors */
 	[0] = "#1e1e2e", // black
 	[1] = "#f38ba8", // red
-	[2] = "#a6e3a1", // green
+	[2] = "#9ece6a", // green
 	[3] = "#f9e2af", // yellow
 	[4] = "#89b4fa", // blue
 	[5] = "#cba6f7", // magenta
@@ -114,7 +114,7 @@ static const char *colorname[] = {
 	/* 8 bright colors */
 	[8]  = "#585b70", // bright black
 	[9]  = "#f38ba8",
-	[10] = "#a6e3a1",
+	[10] = "#9ece6a",
 	[11] = "#f9e2af",
 	[12] = "#89b4fa",
 	[13] = "#cba6f7",
@@ -204,7 +204,7 @@ static Shortcut shortcuts[] = {
 	{ ControlMask,          XK_minus,       zoom,           {.f = -1} },
 	{ ControlMask,          XK_0,           zoomreset,      {.f = 0} },
 	{ TERMMOD,              XK_C,           clipcopy,       {.i =  0} },
-	{ TERMMOD,              XK_V,           clippaste,      {.i =  0} },
+	{ ControlMask,          XK_v,           clippaste,      {.i =  0} },
 	{ TERMMOD,              XK_Y,           selpaste,       {.i =  0} },
 	{ ShiftMask,            XK_Insert,      selpaste,       {.i =  0} },
 	{ TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
