@@ -11,6 +11,7 @@ return {
       ensure_installed = {
         'javascript',
         'python',
+        'dart',
         'typescript',
         'json',
         'bash',

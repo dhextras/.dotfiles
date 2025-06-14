@@ -26,7 +26,7 @@ return {
 
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim',       opts = {} },
+      { 'j-hui/fidget.nvim', opts = {} },
 
       -- Allows extra capabilities provided by nvim-cmp
       'hrsh7th/cmp-nvim-lsp',
@@ -170,7 +170,6 @@ return {
       local servers = {
         clangd = {},
         gopls = {},
-        dartls = {},
         pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -208,23 +207,51 @@ return {
 
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
-      local ensure_installed = vim.tbl_keys(servers or {})
+      local ensure_installed = {}
       vim.list_extend(ensure_installed, {
         'ols',
         'isort',
         'black',
+        'typescript-language-server',
         'stylua',
         'prettier',
         'markdownlint',
         'prettierd',
         'pyright',
-        'tsserver',
         'lua_ls',
         'gopls',
         'clangd',
         'clang-format',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+
+      require('lspconfig').dartls.setup {
+        cmd = {
+          'dart',
+          'language-server',
+          '--protocol=lsp',
+        },
+        filetypes = { 'dart' },
+        init_options = {
+          onlyAnalyzeProjectsWithOpenFiles = false,
+          suggestFromUnimportedLibraries = true,
+          closingLabels = true,
+          outline = false,
+          flutterOutline = false,
+        },
+        settings = {
+          dart = {
+            analysisExcludedFolders = {
+              vim.fn.expand '~/.pub-cache',
+              vim.fn.expand '~/development/flutter/',
+              vim.fn.expand '~/development/android/',
+            },
+            updateImportsOnRename = true,
+            completeFunctionCalls = true,
+            showTodos = true,
+          },
+        },
+      }
 
       require('mason-lspconfig').setup {
         handlers = {
