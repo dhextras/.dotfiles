@@ -138,6 +138,7 @@ configure_bindings_and_aliases() {
 	add_key_binding "C-h" "history | sort -rn | fzf --padding=5,0,0,0 | sed '\''s/^[ ]*[0-9]*[ ]*//'\'' | xclip -selection clipboard; echo Copied: \$(xclip -o -selection clipboard); echo"
 	add_key_binding "C-f" "~/.local/bin/tmux-sessionizer"
 	add_key_binding "C-e" "nvim ."
+	add_key_binding "C-j" "tmux a"
 	add_key_binding "C-g" "cd \\\"\$(find \${XDG_CONFIG_HOME:-\$HOME}/projects /mnt/dhextras /media/Dhextras -type d 2>/dev/null | fzf --padding=5,0,0,0)\\\"; clear; echo Current Dir: \$(pwd)"
 
 	add_alias "emerge" "sudo emerge "
