@@ -9,7 +9,7 @@ static char *font = "ComicShannsMono Nerd Font:pixelsize=19:antialias=true:autoh
 static int lineheight = 19;
 static int linewidth = 19;
 
-static int borderpx = 12;
+static int borderpx = 14;
 
 /*
  * What program is execed by st depends of these precedence rules:
@@ -29,8 +29,8 @@ char *stty_args = "stty raw pass8 nl -echo -iexten -cstopb 38400";
 char *vtiden = "\033[?6c";
 
 /* Kerning / character bounding-box multipliers */
-static float cwscale = 1.0;
-static float chscale = 1.0;
+static float cwscale = 1;
+static float chscale = 0.98;
 
 /*
  * word delimiter string
