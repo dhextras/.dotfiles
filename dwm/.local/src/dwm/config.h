@@ -169,14 +169,14 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
-	{ MODKEY|ShiftMask,             XK_f,      fullscreen,     {0} },
+	{ MODKEY|ShiftMask,             XK_f,      togglefullscr,     {0} },
 	{ MODKEY|Mod1Mask,              XK_p,      spawn,          SHCMD("playerctl --player=spotify previous") },
 	{ MODKEY|Mod1Mask,              XK_s,      spawn,          SHCMD("playerctl --player=spotify play-pause") },
 	{ MODKEY|Mod1Mask,              XK_n,      spawn,          SHCMD("playerctl --player=spotify next") },
 	{ MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("flameshot gui") },
 	{ Mod4Mask,                     XK_s,      spawn,          SHCMD("flameshot gui") },
 	{ Mod4Mask,                     XK_F5,     spawn,          SHCMD("~/.local/src/cscripts/tagstoggle.sh") },
-	{ 0,                            XK_F11,    fullscreen,     {0} },
+	{ 0,                            XK_F11,    togglefullscr,     {0} },
 	{ 0,             XF86XK_MonBrightnessUp,   spawn,          SHCMD("~/.local/src/cscripts/brightup.sh") },
 	{ 0,             XF86XK_MonBrightnessDown, spawn,          SHCMD("~/.local/src/cscripts/brightdown.sh") },
 	{ 0,             XF86XK_AudioRaiseVolume,  spawn,          SHCMD("amixer set Master 5%+") },
