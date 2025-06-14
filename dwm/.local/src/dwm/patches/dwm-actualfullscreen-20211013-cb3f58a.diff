@@ -49,15 +49,17 @@ index 4465af1..c1b899a 100644
  static void toggletag(const Arg *arg);
  static void toggleview(const Arg *arg);
  static void unfocus(Client *c, int setfocus);
-@@ -1719,6 +1720,13 @@ togglefloating(const Arg *arg)
+@@ -1719,6 +1720,15 @@ togglefloating(const Arg *arg)
  	arrange(selmon);
  }
  
 +void
 +togglefullscr(const Arg *arg)
 +{
-+  if(selmon->sel)
++  if (selmon->sel) {
 +    setfullscreen(selmon->sel, !selmon->sel->isfullscreen);
++    togglebar(arg);
++  }
 +}
 +
  void

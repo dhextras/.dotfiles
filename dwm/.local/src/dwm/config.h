@@ -3,7 +3,7 @@
 #define FORCE_VSPLIT 1  /* nrowgrid layout: force two clients to always split vertically */
 
 /* appearance */
-static const unsigned int borderpx  = 0;          /* border pixel of windows */
+static const unsigned int borderpx  = 2;          /* border pixel of windows */
 static const unsigned int snap      = 48;           /* snap pixel */
 static const unsigned int gappih    = 7;            /* horiz inner gap between windows */
 static const unsigned int gappiv    = 7;            /* vert inner gap between windows */
@@ -41,15 +41,15 @@ static const char col_cyan[]        = "#005577";
 #include <X11/XF86keysym.h>
 
 // static const char *colors[][3]      = {
-// 	/*               fg         bg         border   */
+// 	/*               fg         bg         border    */
 // 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
 // 	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
 // };
 //
 static const char *colors[][3] = {
-    /*               fg         bg         border   */
-    [SchemeNorm] = { col_fg,    col_bg,    col_bg    },
-    [SchemeSel]  = { col_bg,    col_accent_blue, col_accent_blue },
+    /*               fg         bg                  border    */
+    [SchemeNorm] = { col_fg,    col_bg,             col_bg    },
+    [SchemeSel]  = { col_bg,    col_accent_blue,    col_gray1 },
 };
 
 /* tagging */
