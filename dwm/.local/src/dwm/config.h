@@ -38,6 +38,7 @@ static const char col_gray4[]       = "#eeeeee";
 static const char col_cyan[]        = "#005577";
 
 #include "vanitygaps.c"
+#include <time.h>
 #include <X11/XF86keysym.h>
 
 // static const char *colors[][3]      = {
@@ -54,6 +55,9 @@ static const char *colors[][3] = {
 
 /* tagging */
 static const char *tags[] = {"%{T2} %{T-}", "󰖟 ", "󰍦 ", " ", " ", " ", "󰙯 ", "󰊠 "};
+
+/* Lockfile */
+static char lockfile[] = "/tmp/dwm.lock";
 
 static const Rule rules[] = {
 	/* xprop(1):
