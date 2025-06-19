@@ -217,6 +217,49 @@ while true; do
 			scroll_pid=$!
 			sleep 0.2
 		fi
+	elif playerctl --player=vlc status &>/dev/null; then
+		status=$(playerctl --player=vlc status)
+		if [[ "$status" == "Playing" || "$status" == "Paused" ]]; then
+			artist="Unknown"
+			title=$(playerctl --player=vlc metadata xesam:url | sed 's/.*songs\/\(.*\)\.mp3/\1/')
+			nowplaying=$(colorize_text "$artist" "$title")
+			icon="$([[ $status == Playing ]] && echo "$ICON_PLAY" || echo "$ICON_PAUSE")"
+
+			if [[ "$status" == "Paused" ]]; then
+				if [[ "$artist - $title" != "$prev_song" || "$status" != "$prev_status" ]]; then
+					prev_song="$artist - $title"
+					prev_status="$status"
+					[[ $scroll_pid -ne 0 ]] && kill $scroll_pid 2>/dev/null && wait $scroll_pid 2>/dev/null
+					scroll_pid=0
+					static_text=$(repeat_text "$nowplaying" 3)
+					display_text=$(get_display_length "$static_text" "$icon" "$MAX_LEN")
+					echo "$icon$display_text"
+				fi
+				sleep 0.2
+				continue
+			fi
+
+			if [[ "$artist - $title" != "$prev_song" || "$status" != "$prev_status" ]]; then
+				prev_song="$artist - $title"
+				prev_status="$status"
+				[[ $scroll_pid -ne 0 ]] && kill $scroll_pid 2>/dev/null && wait $scroll_pid 2>/dev/null
+				repeated_text=$(repeat_text "$nowplaying" 10)
+				scroll_text "$icon" "$repeated_text" "$MAX_LEN" "$SCROLL_DELAY" &
+				scroll_pid=$!
+			fi
+			sleep 0.2
+		else
+			prev_song=""
+			prev_status=""
+			[[ $scroll_pid -ne 0 ]] && kill $scroll_pid 2>/dev/null && wait $scroll_pid 2>/dev/null
+			scroll_pid=0
+			text="%{F${colors[purple]}}No Myusik%{F-}"
+			icon="$ICON_NOMUSIC"
+			repeated_text=$(repeat_text "$text" 5)
+			scroll_text "$icon" "$repeated_text" "$MAX_LEN" "$SCROLL_DELAY" &
+			scroll_pid=$!
+			sleep 0.2
+		fi
 	else
 		prev_song=""
 		prev_status=""

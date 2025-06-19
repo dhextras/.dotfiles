@@ -174,9 +174,9 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 	{ MODKEY|ShiftMask,             XK_f,      togglefullscr,     {0} },
-	{ MODKEY|Mod1Mask,              XK_p,      spawn,          SHCMD("playerctl --player=spotify previous") },
-	{ MODKEY|Mod1Mask,              XK_s,      spawn,          SHCMD("playerctl --player=spotify play-pause") },
-	{ MODKEY|Mod1Mask,              XK_n,      spawn,          SHCMD("playerctl --player=spotify next") },
+	{ MODKEY|Mod1Mask,              XK_p,      spawn,          SHCMD("playerctl --player=spotify,vlc previous") },
+	{ MODKEY|Mod1Mask,              XK_s,      spawn,          SHCMD("playerctl --player=spotify,vlc play-pause") },
+	{ MODKEY|Mod1Mask,              XK_n,      spawn,          SHCMD("playerctl --player=spotify,vlc next") },
 	{ MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("flameshot gui") },
 	{ Mod4Mask,                     XK_s,      spawn,          SHCMD("flameshot gui") },
 	{ Mod4Mask,                     XK_F5,     spawn,          SHCMD("~/.local/src/cscripts/tagstoggle.sh") },
