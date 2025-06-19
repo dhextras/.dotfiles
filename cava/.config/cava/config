@@ -31,7 +31,7 @@ gradient_color_4 = '#f7b78c'  ; warm peach
 [smoothing]
 integral = 80
 monstercat = 1
-gravity = 90
+gravity = 95
 ignore = 0
 
 [eq]
