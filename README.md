@@ -1,4 +1,4 @@
-Clone the repo and run the install script.... dorkkkkkk🤓
+#### Clone the repo and run the install script.... dorkkkkkk🤓
 
 
 ### Dotfiles Installation

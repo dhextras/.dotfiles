@@ -122,7 +122,7 @@ require('lazy').setup({
   -- after the plugin has been loaded:
   --  config = function() ... end
 
-  {                     -- Useful plugin to show you pending keybinds.
+  { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     config = function() -- This is the function that runs, AFTER loading
@@ -148,6 +148,7 @@ require('lazy').setup({
   require 'dhextras.plugins.telescope',
   require 'dhextras.plugins.lsp',
   require 'dhextras.plugins.treesitter',
+  require 'dhextras.plugins.markdown_viewer',
   require 'dhextras.plugins.mini',
   require 'dhextras.plugins.autoformat',
   require 'dhextras.plugins.autocomplete',
