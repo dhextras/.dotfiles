@@ -1,0 +1,36 @@
+sys-auth/pambase elogind
+media-libs/libglvnd X
+net-wireless/wpa_supplicant dbus
+>=x11-libs/cairo-1.18.4-r1 X
+
+>=x11-libs/libxkbcommon-1.8.1-r1 X
+
+>=x11-libs/pango-1.52.2 X
+>=app-text/xmlto-0.0.28-r11 text
+>=media-plugins/alsa-plugins-1.2.12 pulseaudio
+x11-misc/picom drm opengl pcre
+>=dev-libs/libdbusmenu-16.04.0-r2 gtk3
+media-sound/spotify libnotify local-playback pulseaudio
+x11-misc/polybar pulseaudio network ipc
+media-libs/libsdl2 X opengl video
+
+media-libs/mesa tools
+net-libs/nodejs npm
+media-sound/cava pulseaudio
+media-sound/pulseaudio bluetooth bluez
+media-video/vlc opus libass srt ffmpeg x264 x265 mp3 ogg theora flac vpx pulseaudio alsa
+
+>=media-libs/libvpx-1.14.1 postproc
+www-client/firefox pulseaudio
+media-libs/libsixel png jpeg
+
+>=app-text/poppler-25.03.0 cairo
+>=media-libs/gegl-0.4.58 cairo
+media-gfx/gimp jpeg png tiff webp heif openexr mng postscript vector-icons xpm udev
+
+>=dev-python/pillow-11.2.1 webp tiff
+>=media-libs/tiff-4.7.0-r1 jpeg
+media-gfx/inkscape svg2
+x11-base/xorg-server xephyr
+
+media-gfx/imagemagick jpeg png svg xml fontconfig truetype

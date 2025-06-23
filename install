@@ -10,8 +10,9 @@ NC='\033[0m'
 # Global variables
 DOTFILES="${XDG_CONFIG_HOME:-$HOME}/.dotfiles"
 BASHRC_FILE="${XDG_CONFIG_HOME:-$HOME}/.bashrc"
-EXCLUDED_FILES=".git .gitignore README.md install preremoval"
+EXCLUDED_FILES=".git .gitignore README.md install preremoval backups"
 MODULAR_CONFIGS="dwm st"
+# FIXME: External dependencies like maybe st dwm polybar rofi picom etc.... see if you wanna add it or not 
 DEPENDENCIES="xclip fzf stow git make gcc patch nvim sed"
 FAILED_OPERATIONS=0
 

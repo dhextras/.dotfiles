@@ -1,0 +1,45 @@
+diff --git a/dwm.c b/dwm.c
+index daded97..a706afa 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -229,6 +229,7 @@ static void tag(const Arg *arg);
+ static void tagmon(const Arg *arg);
+ static void togglebar(const Arg *arg);
+ static void togglesticky(const Arg *arg);
++static void toggleopacity(const Arg *arg);
+ static void togglefloating(const Arg *arg);
+ static void togglefullscr(const Arg *arg);
+ static void toggletag(const Arg *arg);
+@@ -1932,6 +1933,32 @@ togglesticky(const Arg *arg)
+ 	arrange(selmon);
+ }
+ 
++static void
++toggleopacity(const Arg *arg) {
++    if (!selmon->sel)
++        return;
++
++    Atom prop = XInternAtom(dpy, "_DWM_NO_OPACITY", False);
++    Atom actual_type;
++    int actual_format;
++    unsigned long nitems, bytes_after;
++    unsigned char *data = NULL;
++
++    if (XGetWindowProperty(dpy, selmon->sel->win, prop, 0, 1, False,
++                          XA_CARDINAL, &actual_type, &actual_format,
++                          &nitems, &bytes_after, &data) == Success && data) {
++        // Property exists, remove it
++        XDeleteProperty(dpy, selmon->sel->win, prop);
++        XFree(data);
++    } else {
++        // Property doesn't exist, add it
++        unsigned long value = 1;
++        XChangeProperty(dpy, selmon->sel->win, prop, XA_CARDINAL, 32,
++                       PropModeReplace, (unsigned char*)&value, 1);
++    }
++    XSync(dpy, False);
++}
++
+ void
+ toggletag(const Arg *arg)
+ {
