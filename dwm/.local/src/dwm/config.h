@@ -65,7 +65,8 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class               instance    title       tags mask     isfloating   monitor */
-	{ "Gimp",              NULL,       NULL,       0,            1,           -1 },
+	{ "floatterm",         NULL,       NULL,       0,            1,           -1 },
+	{ "Gimp",              NULL,       NULL,       0,            0,           -1 },
 	{ "Google-chrome",     NULL,       NULL,       1 << 1,       0,           -1 },
 	{ "Firefox",           NULL,       NULL,       1 << 1,       0,           -1 },
 	{ "Whatsapp",          NULL,       NULL,       1 << 2,       0,           -1 },
@@ -180,7 +181,7 @@ static const Key keys[] = {
 	{ MODKEY|Mod1Mask,              XK_s,      spawn,          SHCMD("playerctl --player=spotify,vlc play-pause") },
 	{ MODKEY|Mod1Mask,              XK_n,      spawn,          SHCMD("playerctl --player=spotify,vlc next") },
 	{ MODKEY,                       XK_s,      spawn,          SHCMD("flameshot gui") },
-	{ MODKEY|ShiftMask,             XK_b,      spawn,          SHCMD("~/.local/src/cscripts/bgmanager.sh select") },
+	{ MODKEY|ShiftMask,             XK_b,      spawn,          SHCMD("st -c floatterm -e ~/.local/src/cscripts/bgmanager.sh select") },
 	{ MODKEY|Mod1Mask,              XK_b,      spawn,          SHCMD("~/.local/src/cscripts/bgmanager.sh cycle") },
 	{ MODKEY|Mod1Mask,              XK_r,      spawn,          SHCMD("~/.local/src/cscripts/bgmanager.sh random") },
 	{ MODKEY,                       XK_F5,     spawn,          SHCMD("~/.local/src/cscripts/tagstoggle.sh") },
