@@ -181,7 +181,7 @@ static const Key keys[] = {
 	{ MODKEY|Mod1Mask,              XK_s,      spawn,          SHCMD("playerctl --player=spotify,vlc play-pause") },
 	{ MODKEY|Mod1Mask,              XK_n,      spawn,          SHCMD("playerctl --player=spotify,vlc next") },
 	{ MODKEY,                       XK_s,      spawn,          SHCMD("flameshot gui") },
-	{ MODKEY|ShiftMask,             XK_b,      spawn,          SHCMD("st -c floatterm -e ~/.local/src/cscripts/bgmanager.sh select") },
+	{ MODKEY|ShiftMask,             XK_b,      spawn,          SHCMD("st -c floatterm -g 150x35 -e ~/.local/src/cscripts/bgmanager.sh select") },
 	{ MODKEY|Mod1Mask,              XK_b,      spawn,          SHCMD("~/.local/src/cscripts/bgmanager.sh cycle") },
 	{ MODKEY|Mod1Mask,              XK_r,      spawn,          SHCMD("~/.local/src/cscripts/bgmanager.sh random") },
 	{ MODKEY,                       XK_F5,     spawn,          SHCMD("~/.local/src/cscripts/tagstoggle.sh") },
