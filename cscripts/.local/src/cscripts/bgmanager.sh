@@ -29,7 +29,6 @@ set_wallpaper() {
     echo "$image" > "$CURRENT_WP_FILE"
 }
 
-
 get_random_wallpaper() {
     find "$WALLPAPER_DIR" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.bmp" \) | shuf -n 1
 }
@@ -40,7 +39,6 @@ cycle_wallpapers() {
 
     if [[ -n "$random_wp" ]]; then
         set_wallpaper "$random_wp"
-        echo "Cycled to: $(basename "$random_wp")"
     fi
 }
 
@@ -57,8 +55,8 @@ show_wallpaper_selector() {
     if [[ -n "$selected" ]]; then
         set_wallpaper "$selected"
         sed -i 's/cycling=true/cycling=false/' "$STATE_FILE"
-        pkill -f "bg-manager.*daemon" 2>/dev/null || true
-        echo "Selected: $(basename "$selected")"
+        pkill -f "bgmanager.*daemon" 2>/dev/null || true
+        notify-send "Selected: $(basename "$selected")"
     fi
 }
 
@@ -68,18 +66,16 @@ toggle_cycling() {
 
     if [[ "$current_state" == "true" ]]; then
         sed -i 's/cycling=true/cycling=false/' "$STATE_FILE"
-        pkill -f "bg-manager.*daemon" 2>/dev/null || true
-        echo "Wallpaper cycling stopped"
+        pkill -f "bgmanager.*daemon" 2>/dev/null || true
+        notify-send "Wallpaper cycling stopped"
     else
         sed -i 's/cycling=false/cycling=true/' "$STATE_FILE"
         "$0" start_daemon &
-        echo "Wallpaper cycling started (every ${CYCLE_INTERVAL}s)"
+        notify-send "Wallpaper cycling started (every ${CYCLE_INTERVAL}s)"
     fi
 }
 
 start_daemon() {
-    echo "Background cycling daemon started"
-
     while true; do
         local cycling_state
         cycling_state=$(grep "cycling=" "$STATE_FILE" | cut -d'=' -f2)
