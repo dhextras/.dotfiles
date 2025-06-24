@@ -179,6 +179,7 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_s,      togglesticky,   {0} },
 	{ MODKEY|ShiftMask,             XK_o,      toggleopacity,  {0} },
 	{ MODKEY|ShiftMask,             XK_f,      togglefullscr,  {0} },
+	{ MODKEY|Mod1Mask,              XK_q,      spawn,          SHCMD("~/.local/src/cscripts/powermenu.sh") },
 	{ MODKEY|Mod1Mask,              XK_p,      spawn,          SHCMD("playerctl --player=spotify,vlc previous") },
 	{ MODKEY|Mod1Mask,              XK_s,      spawn,          SHCMD("playerctl --player=spotify,vlc play-pause") },
 	{ MODKEY|Mod1Mask,              XK_n,      spawn,          SHCMD("playerctl --player=spotify,vlc next") },
@@ -195,6 +196,7 @@ static const Key keys[] = {
 	{ 0,             XF86XK_AudioRaiseVolume,  spawn,          SHCMD("amixer set Master 5%+") },
 	{ 0,             XF86XK_AudioLowerVolume,  spawn,          SHCMD("amixer set Master 5%-") },
 	{ 0,             XF86XK_AudioMute,         spawn,          SHCMD("amixer set Master toggle") },
+	{ 0,             XF86XK_PowerOff,          spawn,          SHCMD("~/.local/src/cscripts/powermenu.sh") },
 };
 
 /* button definitions */

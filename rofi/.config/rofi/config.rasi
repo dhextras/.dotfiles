@@ -160,7 +160,7 @@ scrollbar {
     width: 2px;
     border: 0;
     handle-color: @accent;
-    handle-width: 8px;
+    handle-width: 2px;
     padding: 0;
 }
 
