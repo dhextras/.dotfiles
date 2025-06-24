@@ -1,0 +1,27 @@
+diff --git a/dwm.c b/dwm.c
+index 494e79a..1e30043 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -224,6 +224,7 @@ static void setup(void);
+ static void seturgent(Client *c, int urg);
+ static void showhide(Client *c);
+ static void spawn(const Arg *arg);
++static void ricerspawn(const Arg *arg);
+ static void spawnbar();
+ static void tag(const Arg *arg);
+ static void tagmon(const Arg *arg);
+@@ -1867,6 +1868,14 @@ spawn(const Arg *arg)
+ 	}
+ }
+ 
++void
++ricerspawn(const Arg *arg)
++{
++    Arg a = {.ui = 1 << 6}; // Tag 7 (0-indexed, so 6 = tag 7)
++    view(&a);
++    spawn(arg);
++}
++
+ void
+ spawnbar()
+ {

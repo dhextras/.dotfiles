@@ -63,10 +63,12 @@ static const Rule rules[] = {
 	/* xprop(1):
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
+	 *	DWM-Config
 	 */
 	/* class               instance    title       tags mask     isfloating   monitor */
-	{ "floatterm",         NULL,       NULL,       0,            1,           -1 },
 	{ "Gimp",              NULL,       NULL,       0,            0,           -1 },
+	{ "floatterm",         NULL,       NULL,       0,            1,           -1 },
+	{ "ricerterm",         NULL,       NULL,       1 << 6,       0,           -1 },
 	{ "Google-chrome",     NULL,       NULL,       1 << 1,       0,           -1 },
 	{ "Firefox",           NULL,       NULL,       1 << 1,       0,           -1 },
 	{ "Whatsapp",          NULL,       NULL,       1 << 2,       0,           -1 },
@@ -127,6 +129,8 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_p,      incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
+	{ MODKEY|ShiftMask,             XK_g,      setmfact,       {.f = +1.45} },
+	{ MODKEY,                       XK_equal,  setmfact,       {.f = +1.55} },
 	{ MODKEY|ShiftMask,             XK_h,      setcfact,       {.f = +0.25} },
 	{ MODKEY|ShiftMask,             XK_l,      setcfact,       {.f = -0.25} },
 	{ MODKEY|ShiftMask,             XK_o,      setcfact,       {.f =  0.00} },
@@ -181,6 +185,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_s,      spawn,          SHCMD("flameshot gui") },
 	{ MODKEY|ShiftMask,             XK_b,      spawn,          SHCMD("st -c floatterm -g 150x35 -e ~/.local/src/cscripts/bgmanager.sh select") },
 	{ MODKEY,                       XK_d,      spawn,          SHCMD("~/.local/src/cscripts/rofi.sh") },
+	{ MODKEY|Mod1Mask|ShiftMask,    XK_r,      ricerspawn,     SHCMD("~/.local/src/cscripts/ricer.sh") },
 	{ MODKEY|Mod1Mask,              XK_b,      spawn,          SHCMD("~/.local/src/cscripts/bgmanager.sh cycle") },
 	{ MODKEY|Mod1Mask,              XK_r,      spawn,          SHCMD("~/.local/src/cscripts/bgmanager.sh random") },
 	{ MODKEY,                       XK_F5,     spawn,          SHCMD("~/.local/src/cscripts/tagstoggle.sh") },
