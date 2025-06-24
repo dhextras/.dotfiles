@@ -57,7 +57,7 @@ install_rice() {
 
     st -t "Matrix-Rain" -c ricerterm -e bash -c "
         xdotool key super+shift+o
-        zoom_out 12
+        zoom_out 8
         if command -v unimatrix > /dev/null; then
             unimatrix -s 95 -l cgkns
         else
