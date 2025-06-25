@@ -43,15 +43,15 @@ i3lock \
 --layout-font="ComicShannsMono Nerd Font" \
 --verif-font="ComicShannsMono Nerd Font" \
 --wrong-font="ComicShannsMono Nerd Font" \
---time-size=64               \
---date-size=32               \
+--time-size=62               \
+--date-size=28               \
 --wrong-text="Fuck off!"     \
 --verif-text="Checking.."    \
 --noinput-text="No input"    \
 --lock-text="Locked"         \
 --lockfailed-text="Failed"   \
---time-pos="w/2:h/2-15"    \
---date-pos="w/2:h/2+30"    \
+--time-pos="w/2:h/2-5"    \
+--date-pos="w/2:h/2+35"    \
 --radius=150                 \
 --ring-width=6               \
 --pass-media-keys            \
