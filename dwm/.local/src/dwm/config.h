@@ -71,9 +71,11 @@ static const Rule rules[] = {
 	{ "ricerterm",         NULL,       NULL,       1 << 6,       0,           -1 },
 	{ "Google-chrome",     NULL,       NULL,       1 << 1,       0,           -1 },
 	{ "Firefox",           NULL,       NULL,       1 << 1,       0,           -1 },
-	{ "Whatsapp",          NULL,       NULL,       1 << 2,       0,           -1 },
+	{ "whatsapp-desktop",          NULL,       NULL,       1 << 2,       0,           -1 },
+	{ "TelegramDesktop",    NULL,       NULL,       1 << 2,       0,           -1 },
 	{ "Spotify",           NULL,       NULL,       1 << 3,       0,           -1 },
 	{ "jetbrains-studio",  NULL,       NULL,       1 << 6,       0,           -1 },
+	{ "splyrics",          NULL,       NULL,       TAGMASK,      1,           -1 },
 };
 
 /* layout(s) */
@@ -180,6 +182,7 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_o,      toggleopacity,  {0} },
 	{ MODKEY|ShiftMask,             XK_f,      togglefullscr,  {0} },
 	{ MODKEY|Mod1Mask,              XK_q,      spawn,          SHCMD("~/.local/src/cscripts/powermenu.sh") },
+	{ MODKEY|Mod1Mask,              XK_l,      spawn,          SHCMD("~/.local/src/cscripts/splyrics.sh") },
 	{ MODKEY|Mod1Mask,              XK_p,      spawn,          SHCMD("playerctl --player=spotify,vlc previous") },
 	{ MODKEY|Mod1Mask,              XK_s,      spawn,          SHCMD("playerctl --player=spotify,vlc play-pause") },
 	{ MODKEY|Mod1Mask,              XK_n,      spawn,          SHCMD("playerctl --player=spotify,vlc next") },

@@ -4,7 +4,7 @@
 if [[ $# -eq 1 ]]; then
 	all_dirs=("${XDG_CONFIG_HOME:-$HOME}/projects") #$1 gotta figure this shit out...
 else
-	all_dirs=("${XDG_CONFIG_HOME:-$HOME}/projects" "/mnt/dhextras" "/media/Dhextras")
+	all_dirs=("${XDG_CONFIG_HOME:-$HOME}/projects" "${XDG_CONFIG_HOME:-$HOME}/projects/projects_fnsd" "/mnt/dhextras" "/media/Dhextras")
 fi
 
 # If one of the all_dirs were nested or grouped by some sort ( Kinda a slow )
