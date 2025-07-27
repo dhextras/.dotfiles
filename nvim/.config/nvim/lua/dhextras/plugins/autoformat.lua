@@ -1,3 +1,12 @@
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'go',
+  callback = function()
+    vim.opt_local.tabstop = 2
+    vim.opt_local.shiftwidth = 2
+    vim.opt_local.softtabstop = 2
+  end,
+})
+
 return {
   { -- Autoformat
     'stevearc/conform.nvim',
@@ -41,6 +50,7 @@ return {
         json = { 'prettierd', 'prettier', stop_after_first = true },
         html = { 'prettierd', 'prettier', stop_after_first = true },
         c = { 'calng' },
+        go = { 'goimports', 'gofmt' },
       },
     },
   },

@@ -218,6 +218,7 @@ return {
         'markdownlint',
         'prettierd',
         'pyright',
+        'goimports',
         'lua_ls',
         'gopls',
         'clangd',
