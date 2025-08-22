@@ -1,9 +1,9 @@
 #!/bin/bash
 
-ETH_INTERFACE="enp0s20f0u2"
+ETH_INTERFACE="enp0s20f0u"
 WIFI_INTERFACE="wlo1"
 
-ETH_STATUS=$(nmcli -t -f DEVICE,STATE dev | grep "^$ETH_INTERFACE:" | cut -d: -f2)
+ETH_STATUS=$(nmcli -t -f DEVICE,STATE dev | grep "^$ETH_INTERFACE" | cut -d: -f2)
 if [ "$ETH_STATUS" = "connected" ]; then
     echo "%{T2}󰈀%{T-}  Ethernet"
     exit 0
