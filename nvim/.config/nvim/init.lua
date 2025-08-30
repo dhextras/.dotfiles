@@ -151,6 +151,7 @@ require('lazy').setup({
   require 'dhextras.plugins.markdown_viewer',
   require 'dhextras.plugins.mini',
   require 'dhextras.plugins.autoformat',
+  require 'dhextras.plugins.oil',
   require 'dhextras.plugins.autocomplete',
   require 'dhextras.plugins.colorscheme',
   require 'dhextras.plugins.colorizer',

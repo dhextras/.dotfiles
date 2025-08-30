@@ -51,6 +51,9 @@ vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle, { desc = '[U]ndo tree' 
 -- Open workspace explorer
 vim.keymap.set('n', '<leader>we', vim.cmd.Ex, { desc = '[W]orkplace [E]xplorer' })
 
+-- Open workspace in oil
+vim.keymap.set('n', '<leader>wo', vim.cmd.Oil, { desc = '[W]orkplace Explorer in [O]il' })
+
 -- Render Markdown viewer
 vim.keymap.set('n', '<leader>mp', '<cmd>RenderMarkdown toggle<CR>', { desc = 'Toggle [M]arkdown [P]review' })
 
