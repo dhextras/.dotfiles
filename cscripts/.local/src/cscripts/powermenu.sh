@@ -11,6 +11,9 @@ case $chosen in
     "Lock Screen")
         ~/.local/src/cscripts/lock.sh &
         ;;
+    "Lock Current Screen")
+        ~/.local/src/cscripts/lock.sh "cs" &
+        ;;
     "Shutdown")
         loginctl poweroff
         ;;

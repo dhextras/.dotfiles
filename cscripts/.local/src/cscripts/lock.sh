@@ -1,21 +1,23 @@
 #!/bin/bash
 
-rice_count=0
-rice_count=$((rice_count + $(xdotool search --name "DWM-Config" 2>/dev/null | wc -l)))
-rice_count=$((rice_count + $(xdotool search --name "System-Info" 2>/dev/null | wc -l)))
-rice_count=$((rice_count + $(xdotool search --name "cava" 2>/dev/null | wc -l)))
-rice_count=$((rice_count + $(xdotool search --name "Matrix-Rain" 2>/dev/null | wc -l)))
-
-if [ $rice_count -gt 3 ]; then
-    xdotool key super+7
-elif [ $rice_count -gt 0 ]; then
-    xdotool key super+shift+alt+r
-    sleep 0.7
-    xdotool key super+shift+alt+r
-    sleep 2.5
-else
-    xdotool key super+shift+alt+r
-    sleep 2.5
+if [ "$1" != "cs" ] && [ "$1" != "--current-screen" ] && [ "$1" != "-cs" ]; then
+    rice_count=0
+    rice_count=$((rice_count + $(xdotool search --name "DWM-Config" 2>/dev/null | wc -l)))
+    rice_count=$((rice_count + $(xdotool search --name "System-Info" 2>/dev/null | wc -l)))
+    rice_count=$((rice_count + $(xdotool search --name "cava" 2>/dev/null | wc -l)))
+    rice_count=$((rice_count + $(xdotool search --name "Matrix-Rain" 2>/dev/null | wc -l)))
+    
+    if [ $rice_count -gt 3 ]; then
+        xdotool key super+7
+    elif [ $rice_count -gt 0 ]; then
+        xdotool key super+shift+alt+r
+        sleep 0.7
+        xdotool key super+shift+alt+r
+        sleep 2.5
+    else
+        xdotool key super+shift+alt+r
+        sleep 2.5
+    fi
 fi
 
 
