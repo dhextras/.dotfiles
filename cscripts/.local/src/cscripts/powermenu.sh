@@ -1,6 +1,7 @@
 #!/bin/bash
 
 options="Lock Screen
+Lock Current Screen
 Shutdown
 Reboot
 Suspend"
