@@ -42,7 +42,6 @@ select_public_dns() {
     instance_user=$(jq -r ".instances[] | select(.pem_name == \"$pem_name\") | .user" "$INSTANCES_JSON")
     echo "Instance User: $instance_user"
 }
-
 connect() {
     port=5901
 
@@ -57,7 +56,13 @@ connect() {
         if [[ $2 =~ ^-?[0-9]+$ ]]; then
             port=$2
         fi
-        ssh -i "$pem_file" -L $port:localhost:5901 -N -f "$instance_user@$public_dns"
+
+        # Kill existing tunnel on chosen port
+        if declare -f kst >/dev/null 2>&1; then
+            kst "$port"
+        fi
+
+        ssh -i "$pem_file" -L "$port:localhost:5901" -N -f "$instance_user@$public_dns"
         ;;
     -r)
         ssh -i "$pem_file" -qnN -L 3389:localhost:3389 "$instance_user@$public_dns"
@@ -68,6 +73,7 @@ connect() {
         ;;
     esac
 }
+
 if [[ "$1" == "-v" && "$#" -gt 2 ]]; then
     echo "Usage: $0 -v <optional:port>"
     exit 1
