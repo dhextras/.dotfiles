@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Find SSH tunnel process forwarding 5901 and kill it
+PID=$(ps aux | grep "ssh .*5901:localhost:5901" | grep -v grep | awk '{print $2}')
+
+if [ -n "$PID" ]; then
+    echo "Killing SSH tunnel on port 5901 (PID: $PID)..."
+    kill -9 $PID
+    echo "Done."
+else
+    echo "No SSH tunnel found on port 5901."
+fi
