@@ -1,3 +1,4 @@
 pem_files/
 instances.json
+instance_groups.json
 gcp

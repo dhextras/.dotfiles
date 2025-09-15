@@ -145,6 +145,10 @@ configure_bindings_and_aliases() {
 	add_alias "emerge" "sudo emerge "
 	add_alias "mdwm" "bash -c \\\"if ! sudo -k; then echo 'Failed to reset sudo credentials'; exit 1; fi; cd ~/.local/src/dwm && sudo make clean install && cd -\\\""
 	add_alias "mst" "bash -c \\\"if ! sudo -k; then echo 'Failed to reset sudo credentials'; exit 1; fi; cd ~/.local/src/st && sudo make clean install && cd -\\\""
+	# NOTE: For this to work you must have the same password for all of your vnc servers
+	# And make sure to save thepassword in encrypted format
+	# vncpasswd -f <<< "yourpassword" > ~/.vnc/passwd
+	add_alias "vvnc" "vncviewer -passwd ~/.vnc/passwd"
 
 	log "Bindings and aliases configured successfully"
 }

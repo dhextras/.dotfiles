@@ -1,0 +1,37 @@
+#!/bin/bash
+PEM="$HOME/.local/bin/pem_files/maribeth_scrapers.pem"
+CONFIG_FILE="$HOME/.local/bin/instance_groups.json"
+
+SELECTION=$(jq -r '.server_groups | to_entries | .[] | 
+    "Group \(.key + 1): \(.value | to_entries | map(.key) | join(", "))"' "$CONFIG_FILE" | \
+    fzf --prompt="Select server group: ")
+
+[ -z "$SELECTION" ] && exit 0
+
+GROUP=$(echo "$SELECTION" | grep -o '^Group [0-9]\+' | grep -o '[0-9]\+')
+GROUP=$((${GROUP} - 1))
+
+SERVER_GROUP=$(jq -r ".server_groups[$GROUP]" "$CONFIG_FILE")
+readarray -t HOSTS <<< $(echo "$SERVER_GROUP" | jq -r 'to_entries | .[].value')
+COUNT=${#HOSTS[@]}
+GROUP_NUM=$((${GROUP} + 1))
+SESSION="g$GROUP_NUM"
+
+tmux kill-session -t "$SESSION" 2>/dev/null
+
+case $COUNT in
+    1) tmux new-session -d -s "$SESSION" ;;
+    2) tmux new-session -d -s "$SESSION" \; split-window -h ;;
+    3) tmux new-session -d -s "$SESSION" \; split-window -h \; split-window -h \; select-layout even-horizontal ;;
+    4) tmux new-session -d -s "$SESSION" \; split-window -h \; select-pane -t 0 \; split-window -v \; select-pane -t 2 \; split-window -v ;;
+    5) tmux new-session -d -s "$SESSION" \; split-window -h \; split-window -h \; select-layout even-horizontal \; select-pane -t 0 \; split-window -v \; select-pane -t 2 \; split-window -v ;;
+    *) tmux new-session -d -s "$SESSION" \; split-window -h \; split-window -h \; select-layout even-horizontal \; select-pane -t 0 \; split-window -v \; select-pane -t 2 \; split-window -v \; select-pane -t 4 \; split-window -v ;;
+esac
+
+for i in "${!HOSTS[@]}"; do
+    [ $i -lt 6 ] && tmux send-keys -t "$SESSION:0.$i" "ssh -i $PEM ubuntu@${HOSTS[$i]}" Enter
+done
+
+tmux set-window-option -t "$SESSION" synchronize-panes
+tmux attach-session -t "$SESSION"
+
