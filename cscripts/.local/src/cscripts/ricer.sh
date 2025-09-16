@@ -47,7 +47,7 @@ install_rice() {
     st -t "cava" -c ricerterm -e bash -c "
         xdotool key super+shift+o
         zoom_out 12
-        ~/.local/src/cscripts/cava.sh 2>/dev/null || {
+        cava 2>/dev/null || {
             echo -e '${RED}Cava not running - start some music!${NC}'
             exec bash
         }

@@ -8,7 +8,8 @@ higher_cutoff_freq = 10000
 
 [input]
 method = pulse
-source = auto
+# Its just my mic you might be need to replace it
+source = alsa_input.pci-0000_00_1f.3.analog-stereo
 
 [output]
 method = ncurses

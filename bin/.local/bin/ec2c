@@ -58,7 +58,7 @@ connect() {
         fi
 
         # Kill existing tunnel on chosen port
-        if declare -f kst >/dev/null 2>&1; then
+        if command -v kst >/dev/null 2>&1; then
             kst "$port"
         fi
 
